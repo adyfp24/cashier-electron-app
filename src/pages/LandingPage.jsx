@@ -1,9 +1,13 @@
 import React from 'react'
+import Navbar from '../components/layouts/Navbar'
 
 function LandingPage() {
-  return (
-    <div>LandingPage</div>
-  )
+    return (
+        <>
+            <Navbar />
+            <div>LandingPage</div>
+        </>
+    )
 }
 
 export default LandingPage

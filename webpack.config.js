@@ -13,14 +13,22 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/, // Tambahkan exclude untuk mempercepat proses build
+        test: /\.(js|jsx)$/, // Perbarui ini untuk menangani .js dan .jsx
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'], // Tambahkan preset untuk React
+          },
+        },
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'], // Gunakan 'use' alih-alih 'loader' untuk array loaders
+        use: ['style-loader', 'css-loader'], 
       }
     ]
-  }
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'], 
+  },
 };

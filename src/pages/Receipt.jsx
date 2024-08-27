@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function Product() {
+function Receipt() {
     return (
         <>
-            <div>Product</div>
+            <div>Receipt</div>
             <br />
             <Link to='/'>
                 <h1>kembali ke dashboard</h1>
@@ -13,4 +13,4 @@ function Product() {
     )
 }
 
-export default Product
+export default Receipt
