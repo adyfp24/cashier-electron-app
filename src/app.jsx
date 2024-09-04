@@ -5,11 +5,13 @@ import Product from './pages/Product'
 import ProductDetail from './pages/ProductDetail'
 import Payment from './pages/Payment'
 import Receipt from './pages/Receipt'
+import AuthPage from './pages/AuthPage'
 
 function App() {
     return (
         <Routes>
-            <Route path='/' element={<LandingPage />}></Route>
+            <Route path='/' element={<AuthPage />}></Route>
+            <Route path='/dashboard' element={<LandingPage />}></Route>
             <Route path='/product' element={<Product />}></Route>
             <Route path='/product/:id' element={<ProductDetail />}></Route>
             <Route path='/payment' element={<Payment />}></Route>

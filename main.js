@@ -11,6 +11,8 @@ const BrowserWindow = electron.BrowserWindow
 
 let mainWindow
 
+app.disableHardwareAcceleration();
+
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit()
