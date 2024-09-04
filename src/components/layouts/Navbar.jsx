@@ -1,4 +1,5 @@
 import React from 'react'
+import logoImg from '../../../public/images/logo.png';
 import { Link } from 'react-router-dom'
 
 function Navbar() {
@@ -15,8 +16,8 @@ function Navbar() {
                                 </svg>
                             </button>
                             <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-                                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" />
-                                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Automotive Cashier</span>
+                                <img src={logoImg} class="h-8 me-3" alt="FlowBite Logo" />
+                                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Automotive POS</span>
                             </a>
                         </div>
                         <div class="flex items-center">

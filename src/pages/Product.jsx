@@ -6,7 +6,7 @@ function Product() {
         <>
             <div>Product</div>
             <br />
-            <Link to='/'>
+            <Link to='/dashboard'>
                 <h1>kembali ke dashboard</h1>
             </Link>
         </>

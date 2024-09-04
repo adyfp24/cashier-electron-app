@@ -7,6 +7,10 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')({
+      charts: true,
+  }),
+  ],
 }
 
