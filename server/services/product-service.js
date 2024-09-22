@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { data } = require('autoprefixer');
 const prisma = new PrismaClient();
 
 const createProduct = async (product) => {
@@ -19,7 +20,13 @@ const createProduct = async (product) => {
 
 const getAllProduct = async () => {
     try {
-        const allProduct = await prisma.product.findMany();
+        const allProduct = await prisma.product.findMany(
+            {
+                include: {
+                    jenisProduk: true,             
+                }
+            }
+        );
         return allProduct;
     } catch (error) {
         throw new Error('internal server error :' + error.message);
@@ -29,7 +36,10 @@ const getAllProduct = async () => {
 const getProductById = async (productId) => {
     try {
         const product = await prisma.product.findUnique({
-            where: { id: parseInt(productId) }
+            where: { id: parseInt(productId) },
+            include:{
+                jenisProduk: true
+            }
         });
         return product;
     } catch (error) {
