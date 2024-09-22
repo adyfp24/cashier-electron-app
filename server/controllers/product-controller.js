@@ -2,22 +2,13 @@ const productService = require('../services/product-service');
 const { successResponse, clientErrorResponse, errorResponse, 
         createdResponse, notFoundResponse } = require('../middlewares/response');
 
-const getAllProduct = (req, res) => {
+const getAllProduct = async (req, res) => {
     try {
-        const allProductDummy = [
-            'pelumas',
-            'mesin 250cc',
-            'lampu',
-            'velg',
-            'spion'
-        ];
-        res.status(200).json({
-            'status' : 'success',
-            'message' : 'succes fetch all products',
-            'data' : allProductDummy
-        });
+        const allProducts = await productService.getAllProduct();
+        
+        return successResponse(res, allProducts, "data produk berhasil didapat");
     } catch (error) {
-        console.log(error.message);
+        return errorResponse(res, error);
     }
 }
 
