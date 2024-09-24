@@ -9,7 +9,6 @@ export const ProductProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Fetch all products
     const getAllProduct = async () => {
         setLoading(true);
         try {
@@ -21,7 +20,6 @@ export const ProductProvider = ({ children }) => {
         setLoading(false);
     };
 
-    // Fetch product by ID
     const getProductById = async (id) => {
         setLoading(true);
         try {
@@ -33,7 +31,6 @@ export const ProductProvider = ({ children }) => {
         setLoading(false);
     };
 
-    // Add a new product
     const addProduct = async (newData) => {
         setLoading(true);
         try {
@@ -45,7 +42,6 @@ export const ProductProvider = ({ children }) => {
         setLoading(false);
     };
 
-    // Delete a product
     const deleteProduct = async (id) => {
         setLoading(true);
         try {
@@ -57,7 +53,6 @@ export const ProductProvider = ({ children }) => {
         setLoading(false);
     };
 
-    // Update a product
     const updateProduct = async (id, updatedData) => {
         setLoading(true);
         try {
@@ -69,7 +64,6 @@ export const ProductProvider = ({ children }) => {
         setLoading(false);
     };
 
-    // Fetch all products on component mount
     useEffect(() => {
         getAllProduct();
     }, []);
