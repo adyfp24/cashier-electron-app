@@ -1,9 +1,10 @@
 import axios from 'axios';
 
-const API_URL = '/api/products'; 
+const API_URL = '/api/product'; 
 
 const getAll = async () => {
     const response = await axios.get(API_URL);
+    console.log(response.data.data);
     return response.data.data; 
 };
 
@@ -21,7 +22,6 @@ const deleteProduct = async (id) => {
     const response = await axios.delete(`${API_URL}/${id}`);
     return response.data.data;
 };
-
 
 const updateProduct = async (id, updatedProduct) => {
     const response = await axios.put(`${API_URL}/${id}`, updatedProduct);

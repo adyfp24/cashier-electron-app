@@ -9,7 +9,7 @@ function Product() {
         return <div>loading ...</div>
     }
 
-    if (loading) {
+    if (error) {
         return <div>an error occured</div>
     }
 

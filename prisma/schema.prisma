@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./pos.db"
+  url      = "file:./:Users:adyfirdaus:Documents:project:cashier-electron-js:prisma:pos.db"
 }
 
 model User {

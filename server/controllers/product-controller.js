@@ -5,13 +5,14 @@ const { successResponse, clientErrorResponse, errorResponse,
 const getAllProduct = async (req, res) => {
     try {
         const allProducts = await productService.getAllProduct();
-        
+        if(allProducts == 0){
+            return notFoundResponse(res, "data produk tidak tersedia")
+        }
         return successResponse(res, allProducts, "data produk berhasil didapat");
     } catch (error) {
         return errorResponse(res, error);
     }
 }
-
 
 const createProduct = async (req, res) => {
     try {
@@ -38,19 +39,6 @@ const createProduct = async (req, res) => {
         return errorResponse(res, error);
     }
 }
-
-// const getAllProduct = async (req, res) => {
-//     try {
-//         const allProduct = await productService.getAllProduct();
-//         if (allProduct != 0) {
-//             return successResponse(res, allProduct, "data seluruh produk berhasil didapat");
-//         } else {
-//             return notFoundResponse(res, "data produk tidak tersedia")
-//         }
-//     } catch (error) {
-//         return errorResponse(res, error);
-//     }
-// }
 
 const getProductById = async (req, res) => {
     try {
