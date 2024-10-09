@@ -5,11 +5,12 @@
   "main": "main.js",
   "scripts": {
     "start": "node ./bin/www",
-    "build": "webpack --mode development",
+    "build": "webpack --mode development --watch",
     "electron": "electron --force-node-version .",
-    "dev": "npm-run-all --parallel electron start",
+    "dev": "npm-run-all --parallel electron dev-server",
     "package": "electron-packager . sample-app --platform=darwin --arch x64 --overwrite",
-    "seed": "node prisma/seeders/index"
+    "seed": "node prisma/seeders/index",
+    "dev-server": "nodemon ./bin/www"
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
@@ -42,6 +43,7 @@
     "css-loader": "^7.1.2",
     "electron": "^32.0.1",
     "file-loader": "^6.2.0",
+    "nodemon": "^3.1.7",
     "npm-run-all": "^4.1.5",
     "prisma": "^5.19.1",
     "style-loader": "^4.0.0",

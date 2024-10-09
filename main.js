@@ -9,6 +9,7 @@ const app = electron.app
 
 const BrowserWindow = electron.BrowserWindow
 
+
 let mainWindow
 
 app.disableHardwareAcceleration();

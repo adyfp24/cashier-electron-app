@@ -4,7 +4,6 @@ const API_URL = '/api/product';
 
 const getAll = async () => {
     const response = await axios.get(API_URL);
-    console.log(response.data.data);
     return response.data.data; 
 };
 
