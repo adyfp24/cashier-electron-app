@@ -35,7 +35,7 @@ export const ProductProvider = ({ children }) => {
         setLoading(true);
         try {
             const addedProduct = await productService.addProduct(newData);
-            setProducts([...products, addedProduct]); // Menambahkan produk baru ke state products
+            setProducts([...products, addedProduct]);
         } catch (err) {
             setError(err.message);
         }
