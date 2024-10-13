@@ -6,6 +6,7 @@ import ProductDetail from './pages/ProductDetail'
 import Payment from './pages/Payment'
 import Receipt from './pages/Receipt'
 import AuthPage from './pages/AuthPage'
+import TransactionHistory from './pages/TransactionHistory'
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
             <Route path='/product/:id' element={<ProductDetail />}></Route>
             <Route path='/payment' element={<Payment />}></Route>
             <Route path='/receipt' element={<Receipt />}></Route>
+            <Route path='/history' element={<TransactionHistory />}></Route>
         </Routes>
     )
 }

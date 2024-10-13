@@ -93,7 +93,7 @@ function Payment() {
                                             onClick={() => removeFromCart(item.id)}
                                             className="ml-4 text-red-600 dark:text-red-400 hover:underline"
                                         >
-                                            Remove
+                                            Hapus
                                         </button>
                                     </div>
                                 </div>
