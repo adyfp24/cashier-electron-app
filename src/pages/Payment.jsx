@@ -63,8 +63,8 @@ function Payment() {
 
                     <div className="relative overflow-hidden bg-white shadow-md mt-28 dark:bg-gray-800 sm:rounded-lg">
                         <div className="p-4">
-                            <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Cart</h2>
-                            {cart.map((item) => (
+                            <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Daftar Pembelian</h2>
+                            {cart.length !== 0 ? cart.map((item) => (
                                 <div key={item.id} className="flex items-center justify-between mb-2">
                                     <span className="text-gray-700 dark:text-gray-300">{item.nama}</span>
                                     <div className="flex items-center">
@@ -87,7 +87,7 @@ function Payment() {
                                             +
                                         </button>
                                         <span className="ml-4 text-gray-700 dark:text-gray-300">
-                                            ${(item.harga * item.quantity).toFixed(2)}
+                                            Rp. {(item.harga * item.quantity).toFixed(2)}
                                         </span>
                                         <button
                                             onClick={() => removeFromCart(item.id)}
@@ -97,10 +97,14 @@ function Payment() {
                                         </button>
                                     </div>
                                 </div>
-                            ))}
+                            )) : 
+                                <div>
+                                   <h6 className='font-thin text-white'>Belum ada produk yang ditambahkan</h6>
+                                </div>
+                            }
                             <div className="mt-4 text-right">
                                 <p className="text-xl font-bold text-gray-900 dark:text-white">
-                                    Total: ${total.toFixed(2)}
+                                    Total: Rp {total.toFixed(2)}
                                 </p>
                             </div>
                             <div className="mt-4">
@@ -108,7 +112,7 @@ function Payment() {
                                     console.log(cart);
                                     alert('test bayar sukses');
                                 }} className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded hover:bg-blue-700">
-                                    Complete Purchase
+                                    Selesaikan Transaksi
                                 </button>
                             </div>
                         </div>
@@ -129,7 +133,7 @@ function Payment() {
                                             type="text"
                                             id="simple-search"
                                             className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                            placeholder="Search product name or category"
+                                            placeholder="Cari Produk atau kategori"
                                             required=""
                                         />
                                     </div>
@@ -140,12 +144,12 @@ function Payment() {
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" className="px-4 py-3">Product Name</th>
-                                        <th scope="col" className="px-4 py-3">Category</th>
-                                        <th scope="col" className="px-4 py-3">Stock</th>
-                                        <th scope="col" className="px-4 py-3">Price</th>
+                                        <th scope="col" className="px-4 py-3">Nama Produk</th>
+                                        <th scope="col" className="px-4 py-3">Kategori</th>
+                                        <th scope="col" className="px-4 py-3">Stok</th>
+                                        <th scope="col" className="px-4 py-3">Harga</th>
                                         <th scope="col" className="px-4 py-3">
-                                            <span className="sr-only">Add to Cart</span>
+                                            <span className="sr-only">Tambah</span>
                                         </th>
                                     </tr>
                                 </thead>
@@ -161,7 +165,7 @@ function Payment() {
                                                     onClick={() => addToCart(product)}
                                                     className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                                                 >
-                                                    Add to Cart
+                                                    Tambah
                                                 </button>
                                             </td>
                                         </tr>
