@@ -1,8 +1,20 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import logoImg from '../../../public/images/logo.png';
 import { Link } from 'react-router-dom'
 
 function Navbar() {
+    const [darkMode, setDarkMode] = useState(false)
+
+    useEffect(() => {
+        darkMode
+            ? document.documentElement.classList.add("dark")
+            : document.documentElement.classList.remove("dark");
+    }, [darkMode])
+
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode)
+    }
+
     return (
         <>
             <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -22,7 +34,29 @@ function Navbar() {
                         </div>
                         <div class="flex items-center">
                             <div class="flex items-center ms-3">
-                                <div>
+                                <div className='flex items-center'>
+                                    <div className='flex flex-col mr-3'>
+                                        <h6 className='text-sm'>Dark Mode</h6>
+                                    </div>
+                                    <div className="mr-3 text-center text-black dark:text-white">
+
+                                        <div className="flex items-center justify-center">
+                                            <label htmlFor="toggleDarkMode" className="relative cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    id="toggleDarkMode"
+                                                    className="sr-only"
+                                                    checked={darkMode}
+                                                    onChange={toggleDarkMode}
+                                                />
+                                                <div className="block h-8 bg-gray-200 rounded-full w-14"></div>
+                                                <div
+                                                    className={`absolute left-1 top-1 w-6 h-6 rounded-full transition transform ${darkMode ? "translate-x-6 bg-green-500" : "bg-gray-500"
+                                                        }`}
+                                                ></div>
+                                            </label>
+                                        </div>
+                                    </div>
                                     <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                                         <span class="sr-only">Open user menu</span>
                                         <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
