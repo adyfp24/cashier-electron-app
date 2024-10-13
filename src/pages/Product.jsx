@@ -68,7 +68,7 @@ function Product() {
         <>
             <Navbar />
             <Sidebar />
-            <section class="bg-gray-50 dark:bg-gray-900 h-screen p-3 sm:p-5 md:ml-64 pt-20">
+            <section class="bg-gray-50 dark:bg-gray-900 h-full p-3 sm:p-5 md:ml-64 pt-20">
                 <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
 
                     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden mt-20">

@@ -38,7 +38,7 @@ function LandingPage() {
                         fill: true,
                     },
                     {
-                        label: 'Total Pendapatan ($)',
+                        label: 'Total Pendapatan (Rp)',
                         data: [5000, 10000, 7500, 15000, 10000, 20000, 18000, 15000, 22000, 25000, 26000, 30000],
                         borderColor: 'rgba(239, 68, 68, 0.7)', // Red
                         backgroundColor: 'rgba(239, 68, 68, 0.2)',
@@ -136,7 +136,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Total Pendapatan</h3>
-                            <p className="text-2xl font-bold">$12,345</p>
+                            <p className="text-2xl font-bold">Rp 12,345</p>
                         </div>
                     </div>
                 </div>
