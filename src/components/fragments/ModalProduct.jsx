@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
-    // State untuk menyimpan data produk
     const [formData, setFormData] = useState({
         nama: '',
         stok: 0,
@@ -9,7 +8,6 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
         jenis_produk: '',
     });
 
-    // Mengatur state berdasarkan data produk jika mode edit
     React.useEffect(() => {
         if (productData) {
             setFormData({
@@ -21,7 +19,6 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
         }
     }, [productData]);
 
-    // Fungsi untuk menghandle perubahan input
     const handleChange = (e) => {
         const { name, value } = e.target;
         const newValue = (name === 'stok' || name === 'harga' || name === 'jenis_produk') ? parseInt(value, 10) : value
@@ -31,11 +28,10 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
         }));
     };
 
-    // Fungsi untuk menghandle submit form
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData); // Panggil fungsi submit yang diteruskan dari parent
-        onClose(); // Tutup modal setelah submit
+        onSubmit(formData);
+        onClose(); 
     };
 
     return (
