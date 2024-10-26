@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PopUpConfirm({ data, onConfirm, onCancel }) {
+function PopUpConfirm({ data, onConfirm}) {
   return (
     <div
       id="info-popup"

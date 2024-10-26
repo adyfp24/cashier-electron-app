@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import { ProductContext } from '../context/productContext';
+import PopUpConfirm from '../components/fragments/PopUpConfirm';
 
 function Payment() {
     const { products } = useContext(ProductContext);
@@ -10,6 +11,7 @@ function Payment() {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [cart, setCart] = useState([]);
     const [total, setTotal] = useState(0);
+    const [popUpConfirm, setPopUpConfirm] = useState(false);
 
     useEffect(() => {
         if (searchQuery === '') {
@@ -54,6 +56,15 @@ function Payment() {
         ));
     };
 
+    const showPopUpConfirm = () => {
+        setPopUpConfirm(true)
+    }
+
+    const confirmTransaction = () => {
+        console.log(cart)
+        
+    }
+
     return (
         <>
             <Navbar />
@@ -97,9 +108,9 @@ function Payment() {
                                         </button>
                                     </div>
                                 </div>
-                            )) : 
+                            )) :
                                 <div>
-                                   <h6 className='font-thin text-white'>Belum ada produk yang ditambahkan</h6>
+                                    <h6 className='font-thin text-white'>Belum ada produk yang ditambahkan</h6>
                                 </div>
                             }
                             <div className="mt-4 text-right">
@@ -108,15 +119,21 @@ function Payment() {
                                 </p>
                             </div>
                             <div className="mt-4">
-                                <button onClick={() => {
-                                    console.log(cart);
-                                    alert('test bayar sukses');
-                                }} className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded hover:bg-blue-700">
+                                <button onClick={showPopUpConfirm} className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded hover:bg-blue-700">
                                     Selesaikan Transaksi
                                 </button>
                             </div>
                         </div>
                     </div>
+
+                    {popUpConfirm && (
+                        <PopUpConfirm
+                            onConfirm={showPopUpConfirm}
+                            data={{ title: 'Konfirmasi Transaksi', text: 'Selesaikan transaksi dan cetak struct pembelian ?' }}
+                            onCancel={setPopUpConfirm(false)}
+                        />
+                    )}
+
                     <div className="relative mt-10 overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                         <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                             <div className="w-full md:w-1/2">
