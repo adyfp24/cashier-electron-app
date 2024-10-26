@@ -11,10 +11,10 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
     React.useEffect(() => {
         if (productData) {
             setFormData({
-                nama: productData.nama,
-                stok: productData.stok,
-                harga: productData.harga,
-                jenis_produk: productData.jenis_produk,
+                nama: productData.nama || '',
+                stok: productData.stok || 0,
+                harga: productData.harga || 0,
+                jenis_produk: productData.jenis_produk || '1',
             });
         }
     }, [productData]);
