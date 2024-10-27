@@ -13,25 +13,32 @@ function Product() {
     const [filteredProducts, setFilteredProducts] = useState([]);
 
     const [isModalOpen, setModalOpen] = useState(false)
-    const [currentProduct, setCurrentProduct] = useState(null)
+    const [selectedProduct, setSelectedProduct] = useState(null)
     const navigate = useNavigate()
 
     const handleAddProduct = () => {
-        setCurrentProduct(null)
+        setSelectedProduct(null)
         setModalOpen(true)
     }
 
     const handleEditProduct = (product) => {
-        setCurrentProduct(product)
+        setSelectedProduct(product)
         setModalOpen(true)
     }
 
     const handleSubmit = async (data) => {
-        if (currentProduct) {
-            await updateProduct(data)
-        } else {
-            await addProduct(data)
-            navigate('/product')
+        try {
+            if (selectedProduct) {
+                await updateProduct(data)
+            } else {
+                await addProduct(data)
+                console.log(data)
+                navigate('/product')
+            }
+            setModalOpen(false)
+            setSelectedProduct(null)
+        } catch (error) {
+            console.log(error.message)
         }
     }
 
@@ -93,12 +100,7 @@ function Product() {
                                     </svg>
                                     Add product
                                 </button>
-                                <ProductModal
-                                    isOpen={isModalOpen}
-                                    onClose={() => setModalOpen(false)}
-                                    productData={currentProduct}
-                                    onSubmit={handleSubmit}
-                                ></ProductModal>
+
                                 <div class="flex items-center space-x-3 w-full md:w-auto">
                                     <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
                                         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
@@ -153,9 +155,9 @@ function Product() {
                                 </thead>
                                 <tbody>
                                     {filteredProducts.map((product) => (
-                                        <tr id={product.id} class="border-b dark:border-gray-700">
-                                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{product.nama}</th>
-                                            <td class="px-4 py-3">{product.jenisProduk.name}</td>
+                                        <tr key={product.id} class="border-b dark:border-gray-700">
+                                            <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{product.nama}</td>
+                                            <td class="px-4 py-3">{product.jenisProduk ? product.jenisProduk.name : "null"}</td>
                                             <td class="px-4 py-3">Yamaha</td>
                                             <td class="px-4 py-3">{product.stok}</td>
                                             <td class="px-4 py-3">{product.harga}</td>
@@ -168,12 +170,11 @@ function Product() {
                                                 {isDropdownOpen && (
                                                     <div id="apple-imac-27-dropdown" class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
-                                                            <li>
-                                                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                                            </li>
+
+                                                            <li onClick={() => {}} class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</li>
+
+                                                            <li onClick={handleEditProduct} class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</li>
+
                                                         </ul>
                                                         <div class="py-1">
                                                             <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
@@ -230,6 +231,16 @@ function Product() {
                     </div>
                 </div>
             </section>
+
+            <ProductModal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setModalOpen(false)
+                    setSelectedProduct(null)
+                }}
+                productData={selectedProduct}
+                onSubmit={handleSubmit}
+            ></ProductModal>
         </>
     )
 }
