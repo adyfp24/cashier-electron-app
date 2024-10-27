@@ -14,7 +14,7 @@ const createOrder = async (req, res) => {
         } else {
             return clientErrorResponse(res, 'pesanan gagal diproses, silahkan coba lagi')
         }
-    } catch (error) {
+    } catch (error) { 
         return errorResponse(res, error);
     }
 };
