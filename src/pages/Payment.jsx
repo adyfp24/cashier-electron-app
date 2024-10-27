@@ -9,7 +9,7 @@ function Payment() {
     const { products } = useContext(ProductContext);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
-       const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState([]);
     const [total, setTotal] = useState(0);
     const [popUpConfirm, setPopUpConfirm] = useState(false);
 
@@ -175,7 +175,13 @@ function Payment() {
                     </div>
                 </div>
             </section >
-            {popUpConfirm && <PopUpConfirm onConfirm={confirmTransaction} onCancel={() => setPopUpConfirm(false)} />
+            {popUpConfirm && <PopUpConfirm
+                data={{
+                    'title': 'Konfirmasi Pembayaran',
+                    'content': 'Transaksi akan dicatat dan struct akan dicetak ketika Anda menekan tombol penyelesaian, pastikan item telah sesuai'
+                }}
+                onConfirm={confirmTransaction}
+                onCancel={() => setPopUpConfirm(false)} />
             }
         </>
     );

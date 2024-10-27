@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PopUpConfirm({ data, onConfirm}) {
+function PopUpConfirm({ data, onConfirm, onCancel }) {
   return (
     <div
       id="info-popup"
@@ -11,9 +11,9 @@ function PopUpConfirm({ data, onConfirm}) {
         <div className="relative p-6 bg-white rounded-lg shadow dark:bg-gray-800">
           <div className="mb-4 text-sm font-light text-gray-500 dark:text-gray-400">
             <h3 className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
-              {data.title}
+              {data ? data.title : ""}
             </h3>
-            <p>{data.text}</p>
+            <p>{data ? data.content : ""}</p>
           </div>
 
           <div className="flex justify-end space-x-4">
@@ -21,13 +21,13 @@ function PopUpConfirm({ data, onConfirm}) {
               onClick={onCancel}
               className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
             >
-              Cancel
+              Tidak
             </button>
             <button
               onClick={onConfirm}
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
             >
-              Confirm
+              Ya
             </button>
           </div>
         </div>
