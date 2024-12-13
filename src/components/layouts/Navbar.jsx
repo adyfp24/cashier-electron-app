@@ -29,7 +29,7 @@ function Navbar() {
                             </button>
                             <a href="https://flowbite.com" class="flex ms-2 md:me-24">
                                 <img src={logoImg} class="h-8 me-3" alt="FlowBite Logo" />
-                                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Automotive POS</span>
+                                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Auto Center Parts</span>
                             </a>
                         </div>
                         <div class="flex items-center">
