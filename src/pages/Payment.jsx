@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import { ProductContext } from '../context/productContext';
@@ -16,6 +16,7 @@ function Payment() {
     const [total, setTotal] = useState(0);
     const [popUpConfirm, setPopUpConfirm] = useState(false);
     const [popUpError, setPopUpError] = useState({ visible: false, message: "" });
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (searchQuery === '') {
@@ -48,7 +49,7 @@ function Payment() {
                     : item
             ));
         } else {
-            setCart([...cart, { productId: product.id, quantity: 1 }]);
+            setCart([...cart, {...product, productId: product.id, quantity: 1 }]);
         }
     };
 
@@ -77,6 +78,7 @@ function Payment() {
         setPopUpConfirm(false);
         try {
             await createPayment(cart);
+            navigate('/receipt');
             setCart([]);
             setTotal(0);
         } catch (err) {
@@ -189,6 +191,7 @@ function Payment() {
                     </div>
                 </div>
             </section >
+            
             {popUpConfirm && <PopUpConfirm
                 data={{
                     'title': 'Konfirmasi Pembayaran',
