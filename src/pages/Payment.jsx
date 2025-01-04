@@ -69,6 +69,7 @@ function Payment() {
     const confirmTransaction = () => {
         console.log(cart);
         setPopUpConfirm(false);
+        
         setCart([]);
         setTotal(0);
     };

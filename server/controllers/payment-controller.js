@@ -6,7 +6,7 @@ const path = require('path');
 
 const createOrder = async (req, res) => {
     try {
-        const { products } = req.body;
+        const products  = req.body;
         
         const newOrder = await paymentService.createOrder(products);
         if (newOrder) {
