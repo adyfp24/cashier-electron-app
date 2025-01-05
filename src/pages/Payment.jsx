@@ -1,17 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import { ProductContext } from '../context/productContext';
+import { PaymentContext } from '../context/paymentContext';
 import PopUpConfirm from '../components/fragments/PopUpConfirm';
+import PopUpError from '../components/fragments/PopUpError';
 
 function Payment() {
     const { products } = useContext(ProductContext);
+    const { createPayment, loading, error } = useContext(PaymentContext);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
-       const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState([]);
     const [total, setTotal] = useState(0);
     const [popUpConfirm, setPopUpConfirm] = useState(false);
+    const [popUpError, setPopUpError] = useState({ visible: false, message: "" });
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (searchQuery === '') {
@@ -36,29 +41,31 @@ function Payment() {
     };
 
     const addToCart = (product) => {
-        const existingItem = cart.find(item => item.id === product.id);
+        const existingItem = cart.find(item => item.productId === product.id);
         if (existingItem) {
             setCart(cart.map(item =>
-                item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                item.productId === product.id
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
             ));
         } else {
-            setCart([...cart, { ...product, quantity: 1 }]);
+            setCart([...cart, {...product, productId: product.id, quantity: 1 }]);
         }
     };
 
     const removeFromCart = (productId) => {
-        setCart(cart.filter(item => item.id !== productId));
+        setCart(cart.filter(item => item.productId !== productId));
     };
 
     const incrementQuantity = (productId) => {
         setCart(cart.map(item =>
-            item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+            item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item
         ));
     };
 
     const decrementQuantity = (productId) => {
         setCart(cart.map(item =>
-            item.id === productId ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
+            item.productId === productId ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
         ));
     };
 
@@ -66,12 +73,21 @@ function Payment() {
         setPopUpConfirm(true);
     };
 
-    const confirmTransaction = () => {
+    const confirmTransaction = async () => {
         console.log(cart);
         setPopUpConfirm(false);
-        setCart([]);
-        setTotal(0);
-    };
+        try {
+            await createPayment(cart);
+            navigate('/receipt');
+            setCart([]);
+            setTotal(0);
+        } catch (err) {
+            setPopUpError({
+                visible: true,
+                message: err || "Terjadi kesalahan saat membuat transaksi.",
+            });
+        }
+    }
 
     return (
         <>
@@ -86,23 +102,23 @@ function Payment() {
                             <div className="space-y-6">
                                 <div className="p-2 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-3">
                                     {cart.length !== 0 ? cart.map((item) => (
-                                        <div key={item.id} className="mb-2 space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+                                        <div key={item.productId} className="mb-2 space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                             <a href="#" className="overflow-hidden rounded">
                                                 <img className="w-10 h-10 mx-auto dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" />
                                                 <img className="hidden w-10 h-10 mx-auto dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="imac image" />
                                             </a>
                                             <div className="flex items-center justify-between space-x-8 md:order-3 md:justify-end">
                                                 <div className="flex items-center">
-                                                    <button onClick={() => decrementQuantity(item.id)} className="inline-flex items-center justify-center w-5 h-5 bg-gray-100 border border-gray-300 rounded-md shrink-0">
+                                                    <button onClick={() => decrementQuantity(item.productId)} className="inline-flex items-center justify-center w-5 h-5 bg-gray-100 border border-gray-300 rounded-md shrink-0">
                                                         -
                                                     </button>
                                                     <input type="text" className="w-10 text-center" value={item.quantity} readOnly />
-                                                    <button onClick={() => incrementQuantity(item.id)} className="inline-flex items-center justify-center w-5 h-5 bg-gray-100 border border-gray-300 rounded-md shrink-0">
+                                                    <button onClick={() => incrementQuantity(item.productId)} className="inline-flex items-center justify-center w-5 h-5 bg-gray-100 border border-gray-300 rounded-md shrink-0">
                                                         +
                                                     </button>
                                                 </div>
                                                 <div>
-                                                    <button onClick={() => removeFromCart(item.id)} className="font-medium text-red-600 text-end">
+                                                    <button onClick={() => removeFromCart(item.productId)} className="font-medium text-red-600 text-end">
                                                         Hapus
                                                     </button>
                                                 </div>
@@ -147,7 +163,7 @@ function Payment() {
                                 <div class="space-y-4">
                                     {cart.length > 0 && <dt class="text-base font-bold text-gray-900 dark:text-white">Sub Total</dt>}
                                     {cart.map((item) => (
-                                        <div key={item.id} class="space-y-2">
+                                        <div key={item.productId} class="space-y-2">
                                             <dl class="flex items-center justify-between gap-4">
                                                 <dt class="text-base font-normal text-gray-500 dark:text-gray-400">{item.nama}</dt>
                                                 <dd class="text-base font-medium text-gray-900 dark:text-white">Rp. {item.harga * item.quantity}</dd>
@@ -175,10 +191,27 @@ function Payment() {
                     </div>
                 </div>
             </section >
-            {popUpConfirm && <PopUpConfirm onConfirm={confirmTransaction} onCancel={() => setPopUpConfirm(false)} />
+            
+            {popUpConfirm && <PopUpConfirm
+                data={{
+                    'title': 'Konfirmasi Pembayaran',
+                    'content': 'Transaksi akan dicatat dan struct akan dicetak ketika Anda menekan tombol penyelesaian, pastikan item telah sesuai'
+                }}
+                onConfirm={confirmTransaction}
+                onCancel={() => setPopUpConfirm(false)} />
             }
+
+            {popUpError?.visible && (
+                <PopUpError
+                    data={{
+                        title: 'Transaksi Gagal',
+                        content: popUpError.message,
+                    }}
+                    onClose={() => setPopUpError({ visible: false, message: "" })}
+                />
+            )}
         </>
     );
-}
 
+}
 export default Payment;

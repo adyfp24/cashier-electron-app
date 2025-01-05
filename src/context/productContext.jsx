@@ -15,7 +15,7 @@ export const ProductProvider = ({ children }) => {
             const allProducts = await productService.getAll();
             setProducts(allProducts);
         } catch (err) {
-            setError(err.message);
+            setError(err);
         }
         setLoading(false);
     };
@@ -26,7 +26,7 @@ export const ProductProvider = ({ children }) => {
             const fetchedProduct = await productService.getById(id);
             setProduct(fetchedProduct);
         } catch (err) {
-            setError(err.message);
+            setError(err);
         }
         setLoading(false);
     };
@@ -37,7 +37,7 @@ export const ProductProvider = ({ children }) => {
             const addedProduct = await productService.addProduct(newData);
             setProducts([...products, addedProduct]);
         } catch (err) {
-            setError(err.message);
+            setError(err);
         }
         setLoading(false);
     };
@@ -46,7 +46,7 @@ export const ProductProvider = ({ children }) => {
         setLoading(true);
         try {
             await productService.deleteProduct(id);
-            setProducts(products.filter(product => product.id !== id)); // Menghapus produk dari state products
+            setProducts(products.filter(product => product.id !== id)); 
         } catch (err) {
             setError(err.message);
         }
@@ -57,9 +57,9 @@ export const ProductProvider = ({ children }) => {
         setLoading(true);
         try {
             const updatedProduct = await productService.updateProduct(id, updatedData);
-            setProducts(products.map(product => (product.id === id ? updatedProduct : product))); // Memperbarui produk di state products
+            setProducts(products.map(product => (product.id === id ? updatedProduct : product))); 
         } catch (err) {
-            setError(err.message);
+            setError(err);
         }
         setLoading(false);
     };

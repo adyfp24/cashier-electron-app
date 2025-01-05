@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', authRoute);
 app.use('/api', productRoute);
-// app.use('/api', paymentRoute);
+app.use('/api', paymentRoute);
 
 app.use(function (req, res, next) {
   next(createError(404));
