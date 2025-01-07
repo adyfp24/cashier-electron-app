@@ -13,6 +13,7 @@ CREATE TABLE "products" (
     "nama" TEXT NOT NULL,
     "stok" INTEGER NOT NULL DEFAULT 0,
     "harga" REAL NOT NULL,
+    "gambar" TEXT,
     "jenis_id" INTEGER NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,

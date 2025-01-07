@@ -30,7 +30,7 @@ export const PaymentProvider = ({ children }) => {
                 tanggal: paymentData.tanggal
             });
         } catch (error) {
-            setError(error)
+            setError(error.message)
         }
         setLoading(false);
     };
@@ -40,7 +40,7 @@ export const PaymentProvider = ({ children }) => {
         try {
 
         } catch (error) {
-            setError(error)
+            setError(error.message)
         }
         setLoading(false);
     }

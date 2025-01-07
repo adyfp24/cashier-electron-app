@@ -1,49 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
+import { TransactionContext } from '../context/transactionContext';
+import ModalDetailHistory from '../components/fragments/ModalDetailHistory';
 
 function TransactionHistory() {
-    const [transactions, setTransactions] = useState([]);
+    const {loading, error, transactions} = useContext(TransactionContext);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [filterPeriod, setFilterPeriod] = useState('all');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
+    
+    const handleDetailClick = (transaction) => {
+        setSelectedTransaction(transaction);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedTransaction(null);
+    };
 
     useEffect(() => {
-        const mockTransactions = [
-            { id: 1, date: '2024-10-14', customer: 'John Doe', total: 150.00, items: ['Product A', 'Product B'] },
-            { id: 2, date: '2023-05-03', customer: 'Jane Smith', total: 200.00, items: ['Product C'] },
-            { id: 3, date: '2023-05-10', customer: 'Bob Johnson', total: 75.50, items: ['Product A', 'Product D'] },
-        ];
-        setTransactions(mockTransactions);
-        setFilteredTransactions(mockTransactions);
-    }, []);
+        setFilteredTransactions(transactions);
+    }, [transactions]);
 
     const filterTransactions = (period) => {
         setFilterPeriod(period);
         const currentDate = new Date();
         let filteredData = [];
-
+    
+        const normalizeDate = (date) => {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            return d;
+        };
+    
+        const normalizedCurrentDate = normalizeDate(currentDate);
+    
         switch (period) {
             case 'daily':
                 filteredData = transactions.filter(transaction => 
-                    new Date(transaction.date).toDateString() === currentDate.toDateString()
+                    normalizeDate(transaction.tanggal).getTime() === normalizedCurrentDate.getTime()
                 );
                 break;
             case 'weekly':
-                const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const oneWeekAgo = new Date(normalizedCurrentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
                 filteredData = transactions.filter(transaction => 
-                    new Date(transaction.date) >= oneWeekAgo
+                    normalizeDate(transaction.tanggal).getTime() >= oneWeekAgo.getTime()
                 );
                 break;
             case 'monthly':
-                filteredData = transactions.filter(transaction => 
-                    new Date(transaction.date).getMonth() === currentDate.getMonth() &&
-                    new Date(transaction.date).getFullYear() === currentDate.getFullYear()
-                );
+                filteredData = transactions.filter(transaction => {
+                    const transactionDate = normalizeDate(transaction.tanggal);
+                    return transactionDate.getMonth() === normalizedCurrentDate.getMonth() &&
+                        transactionDate.getFullYear() === normalizedCurrentDate.getFullYear();
+                });
                 break;
             default:
                 filteredData = transactions;
         }
-
+    
         setFilteredTransactions(filteredData);
     };
 
@@ -60,6 +77,12 @@ function TransactionHistory() {
                     <div className="relative mt-20 overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                         <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                             <div className="flex flex-col items-stretch flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+                                <button 
+                                    onClick={() => filterTransactions('all')} 
+                                    className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'all' ? 'bg-primary-800' : ''}`}
+                                >
+                                    Semua Waktu
+                                </button>
                                 <button 
                                     onClick={() => filterTransactions('daily')} 
                                     className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'daily' ? 'bg-primary-800' : ''}`}
@@ -78,12 +101,6 @@ function TransactionHistory() {
                                 >
                                     Bulanan
                                 </button>
-                                <button 
-                                    onClick={() => filterTransactions('all')} 
-                                    className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'all' ? 'bg-primary-800' : ''}`}
-                                >
-                                    Semua Waktu
-                                </button>
                             </div>
                             <div className="flex flex-col items-stretch flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
                                 <button 
@@ -101,21 +118,22 @@ function TransactionHistory() {
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" className="px-4 py-3">Transaction ID</th>
-                                        <th scope="col" className="px-4 py-3">Date</th>
-                                        <th scope="col" className="px-4 py-3">Customer</th>
-                                        <th scope="col" className="px-4 py-3">Items</th>
+                                        <th scope="col " className="px-4 py-3">No</th>
+                                        <th scope="col" className="w-1/4 px-4 py-3">Tanggal</th>
                                         <th scope="col" className="px-4 py-3">Total</th>
+                                        <th scope="col" className="px-4 py-3">Detail Pembelian</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredTransactions.map((transaction) => (
+                                    {filteredTransactions.map((transaction, index) => (
                                         <tr key={transaction.id} className="border-b dark:border-gray-700">
-                                            <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{transaction.id}</th>
-                                            <td className="px-4 py-3">{transaction.date}</td>
-                                            <td className="px-4 py-3">{transaction.customer}</td>
-                                            <td className="px-4 py-3">{transaction.items.join(', ')}</td>
-                                            <td className="px-4 py-3">${transaction.total.toFixed(2)}</td>
+                                            <td className="px-4 py-3">{index + 1}</td>
+                                            <td className="px-4 py-3">{transaction.tanggal}</td>
+                                            <td className="px-4 py-3">Rp. {transaction.total.toFixed(2)}</td>
+                                            <td className="px-4 py-3">
+                                                <button onClick={() => handleDetailClick(transaction)} className="px-4 py-2 font-semibold text-gray-900 border border-2 border-gray-200 rounded rounded-lg">Detail</button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -162,6 +180,12 @@ function TransactionHistory() {
                     </div>
                 </div>
             </section>
+
+            <ModalDetailHistory
+                isOpen={isModalOpen}
+                transaction={selectedTransaction}
+                onClose={closeModal}
+            />
         </>
     );
 }

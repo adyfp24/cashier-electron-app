@@ -8,7 +8,7 @@ import ProductModal from '../components/fragments/ModalProduct';
 function Product() {
     const { products, error, loading, addProduct,
         deleteProduct, updateProduct } = useContext(ProductContext);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -42,8 +42,13 @@ function Product() {
         }
     }
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
+    const toggleDropdown = (productId) => {
+        if (productId === dropdownOpen) {
+            setDropdownOpen(null);
+        } else {
+            setDropdownOpen(productId);
+        }
+
     };
 
     useEffect(() => {
@@ -94,8 +99,8 @@ function Product() {
                                 </form>
                             </div>
                             <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                                <button onClick={handleAddProduct} type="button" class="flex items-center justify-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
-                                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <button onClick={handleAddProduct} type="button" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    <svg class="h-3.5 w-3.5 mr-2 text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                         <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                                     </svg>
                                     Add product
@@ -155,32 +160,43 @@ function Product() {
                                 </thead>
                                 <tbody>
                                     {filteredProducts.map((product) => (
-                                        <tr key={product.id} class="border-b dark:border-gray-700">
-                                            <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{product.nama}</td>
-                                            <td class="px-4 py-3">{product.jenisProduk ? product.jenisProduk.name : "null"}</td>
-                                            <td class="px-4 py-3">Yamaha</td>
-                                            <td class="px-4 py-3">{product.stok}</td>
-                                            <td class="px-4 py-3">{product.harga}</td>
-                                            <td class="px-4 py-3 flex items-center justify-end">
-                                                <button onClick={toggleDropdown} id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
-                                                    <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                    </svg>
-                                                </button>
-                                                {isDropdownOpen && (
-                                                    <div id="apple-imac-27-dropdown" class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
-
-                                                            <li onClick={() => {}} class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</li>
-
-                                                            <li onClick={handleEditProduct} class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</li>
-
-                                                        </ul>
-                                                        <div class="py-1">
-                                                            <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                                        <tr key={product.id} className="border-b dark:border-gray-700">
+                                            <td scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {product.nama}
+                                            </td>
+                                            <td className="px-4 py-3">{product.jenisProduk ? product.jenisProduk.name : "null"}</td>
+                                            <td className="px-4 py-3">Yamaha</td>
+                                            <td className="px-4 py-3">{product.stok}</td>
+                                            <td className="px-4 py-3">{product.harga}</td>
+                                            <td className="px-4 py-3">
+                                                <div className="relative flex justify-end">
+                                                    <button
+                                                        onClick={() => toggleDropdown(product.id)}
+                                                        id="apple-imac-27-dropdown-button"
+                                                        data-dropdown-toggle="apple-imac-27-dropdown"
+                                                        className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                                        type="button"
+                                                    >
+                                                        <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                        </svg>
+                                                    </button>
+                                                    {dropdownOpen === product.id && (
+                                                        <div className="absolute right-0 z-50 mt-1 bg-white divide-y divide-gray-100 rounded shadow w-28 top-full dark:bg-gray-700 dark:divide-gray-600">
+                                                            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
+                                                                <li onClick={() => { }} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                    Show
+                                                                </li>
+                                                                <li onClick={handleEditProduct} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                    Edit
+                                                                </li>
+                                                                <li onClick={handleEditProduct} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                    Hapus
+                                                                </li>
+                                                            </ul>
                                                         </div>
-                                                    </div>
-                                                )}
+                                                    )}
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
