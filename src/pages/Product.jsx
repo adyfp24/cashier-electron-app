@@ -8,7 +8,7 @@ import ProductModal from '../components/fragments/ModalProduct';
 function Product() {
     const { products, error, loading, addProduct,
         deleteProduct, updateProduct } = useContext(ProductContext);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -42,8 +42,13 @@ function Product() {
         }
     }
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
+    const toggleDropdown = (productId) => {
+        if (productId === dropdownOpen) {
+            setDropdownOpen(null);
+        } else {
+            setDropdownOpen(productId);
+        }
+
     };
 
     useEffect(() => {
@@ -166,7 +171,7 @@ function Product() {
                                             <td className="px-4 py-3">
                                                 <div className="relative flex justify-end">
                                                     <button
-                                                        onClick={toggleDropdown}
+                                                        onClick={() => toggleDropdown(product.id)}
                                                         id="apple-imac-27-dropdown-button"
                                                         data-dropdown-toggle="apple-imac-27-dropdown"
                                                         className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
@@ -176,8 +181,8 @@ function Product() {
                                                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                                         </svg>
                                                     </button>
-                                                    {isDropdownOpen && (
-                                                        <div className="absolute right-0 mt-1 bg-white divide-y divide-gray-100 rounded shadow top-full w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                                    {dropdownOpen === product.id && (
+                                                        <div className="absolute right-0 z-50 mt-1 bg-white divide-y divide-gray-100 rounded shadow w-28 top-full dark:bg-gray-700 dark:divide-gray-600">
                                                             <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
                                                                 <li onClick={() => { }} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Show
@@ -185,12 +190,10 @@ function Product() {
                                                                 <li onClick={handleEditProduct} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Edit
                                                                 </li>
+                                                                <li onClick={handleEditProduct} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                    Hapus
+                                                                </li>
                                                             </ul>
-                                                            <div className="py-1">
-                                                                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                                                    Delete
-                                                                </a>
-                                                            </div>
                                                         </div>
                                                     )}
                                                 </div>
