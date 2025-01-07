@@ -1,18 +1,20 @@
-import React, {createcontext, useState, useEffect} from 'react'
-const transactionService = require('../services/transactionService');
+import React, {createContext, useState, useEffect} from 'react'
+import transactionService from '../services/transactionService';
 
-export const TransactionContext = createcontext();
+export const TransactionContext = createContext();
 
 export const TransactionProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [transactions, setTransactions] = useState([]);
     const [transaction, setTransaction] = useState({});
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const getAllTransaction = async () => {
         setLoading(true);
         try {
             const allData = await transactionService.getAllTransaction();
+            console.log(allData);
             setTransactions(allData);
         } catch (error) {
             setError(error.message)

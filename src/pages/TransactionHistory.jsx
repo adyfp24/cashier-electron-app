@@ -1,21 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
+import { TransactionContext } from '../context/transactionContext';
+import ModalDetailHistory from '../components/fragments/ModalDetailHistory';
 
 function TransactionHistory() {
-    const [transactions, setTransactions] = useState([]);
+    const {loading, error, transactions} = useContext(TransactionContext);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [filterPeriod, setFilterPeriod] = useState('all');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
+    
+    const handleDetailClick = (transaction) => {
+        setSelectedTransaction(transaction);
+        setIsModalOpen(true);
+    };
 
-    useEffect(() => {
-        const mockTransactions = [
-            { id: 1, date: '2024-10-14', customer: 'John Doe', total: 150.00, items: ['Product A', 'Product B'] },
-            { id: 2, date: '2023-05-03', customer: 'Jane Smith', total: 200.00, items: ['Product C'] },
-            { id: 3, date: '2023-05-10', customer: 'Bob Johnson', total: 75.50, items: ['Product A', 'Product D'] },
-        ];
-        setTransactions(mockTransactions);
-        setFilteredTransactions(mockTransactions);
-    }, []);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedTransaction(null);
+    };
+
 
     const filterTransactions = (period) => {
         setFilterPeriod(period);
@@ -101,21 +106,22 @@ function TransactionHistory() {
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" className="px-4 py-3">Transaction ID</th>
-                                        <th scope="col" className="px-4 py-3">Date</th>
-                                        <th scope="col" className="px-4 py-3">Customer</th>
-                                        <th scope="col" className="px-4 py-3">Items</th>
+                                        <th scope="col " className="px-4 py-3">No</th>
+                                        <th scope="col" className="w-1/4 px-4 py-3">Tanggal</th>
                                         <th scope="col" className="px-4 py-3">Total</th>
+                                        <th scope="col" className="px-4 py-3">Detail Pembelian</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredTransactions.map((transaction) => (
+                                    {transactions.map((transaction, index) => (
                                         <tr key={transaction.id} className="border-b dark:border-gray-700">
-                                            <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{transaction.id}</th>
-                                            <td className="px-4 py-3">{transaction.date}</td>
-                                            <td className="px-4 py-3">{transaction.customer}</td>
-                                            <td className="px-4 py-3">{transaction.items.join(', ')}</td>
-                                            <td className="px-4 py-3">${transaction.total.toFixed(2)}</td>
+                                            <td className="px-4 py-3">{index + 1}</td>
+                                            <td className="px-4 py-3">{transaction.tanggal}</td>
+                                            <td className="px-4 py-3">Rp. {transaction.total.toFixed(2)}</td>
+                                            <td className="px-4 py-3">
+                                                <button onClick={() => handleDetailClick(transaction)} className="px-4 py-2 font-semibold text-gray-900 border border-2 border-gray-200 rounded rounded-lg">Detail</button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -162,6 +168,12 @@ function TransactionHistory() {
                     </div>
                 </div>
             </section>
+
+            <ModalDetailHistory
+                isOpen={isModalOpen}
+                transaction={selectedTransaction}
+                onClose={closeModal}
+            />
         </>
     );
 }
