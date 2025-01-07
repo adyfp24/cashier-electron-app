@@ -21,34 +21,46 @@ function TransactionHistory() {
         setSelectedTransaction(null);
     };
 
+    useEffect(() => {
+        setFilteredTransactions(transactions);
+    }, [transactions]);
 
     const filterTransactions = (period) => {
         setFilterPeriod(period);
         const currentDate = new Date();
         let filteredData = [];
-
+    
+        const normalizeDate = (date) => {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            return d;
+        };
+    
+        const normalizedCurrentDate = normalizeDate(currentDate);
+    
         switch (period) {
             case 'daily':
                 filteredData = transactions.filter(transaction => 
-                    new Date(transaction.date).toDateString() === currentDate.toDateString()
+                    normalizeDate(transaction.tanggal).getTime() === normalizedCurrentDate.getTime()
                 );
                 break;
             case 'weekly':
-                const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+                const oneWeekAgo = new Date(normalizedCurrentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
                 filteredData = transactions.filter(transaction => 
-                    new Date(transaction.date) >= oneWeekAgo
+                    normalizeDate(transaction.tanggal).getTime() >= oneWeekAgo.getTime()
                 );
                 break;
             case 'monthly':
-                filteredData = transactions.filter(transaction => 
-                    new Date(transaction.date).getMonth() === currentDate.getMonth() &&
-                    new Date(transaction.date).getFullYear() === currentDate.getFullYear()
-                );
+                filteredData = transactions.filter(transaction => {
+                    const transactionDate = normalizeDate(transaction.tanggal);
+                    return transactionDate.getMonth() === normalizedCurrentDate.getMonth() &&
+                        transactionDate.getFullYear() === normalizedCurrentDate.getFullYear();
+                });
                 break;
             default:
                 filteredData = transactions;
         }
-
+    
         setFilteredTransactions(filteredData);
     };
 
@@ -66,6 +78,12 @@ function TransactionHistory() {
                         <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                             <div className="flex flex-col items-stretch flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
                                 <button 
+                                    onClick={() => filterTransactions('all')} 
+                                    className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'all' ? 'bg-primary-800' : ''}`}
+                                >
+                                    Semua Waktu
+                                </button>
+                                <button 
                                     onClick={() => filterTransactions('daily')} 
                                     className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'daily' ? 'bg-primary-800' : ''}`}
                                 >
@@ -82,12 +100,6 @@ function TransactionHistory() {
                                     className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'monthly' ? 'bg-primary-800' : ''}`}
                                 >
                                     Bulanan
-                                </button>
-                                <button 
-                                    onClick={() => filterTransactions('all')} 
-                                    className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'all' ? 'bg-primary-800' : ''}`}
-                                >
-                                    Semua Waktu
                                 </button>
                             </div>
                             <div className="flex flex-col items-stretch flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
@@ -114,7 +126,7 @@ function TransactionHistory() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {transactions.map((transaction, index) => (
+                                    {filteredTransactions.map((transaction, index) => (
                                         <tr key={transaction.id} className="border-b dark:border-gray-700">
                                             <td className="px-4 py-3">{index + 1}</td>
                                             <td className="px-4 py-3">{transaction.tanggal}</td>
