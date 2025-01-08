@@ -1,11 +1,13 @@
-import React, { useRef, useEffect} from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import { Chart, registerables } from 'chart.js';
+import { DashboardContext } from '../context/dashboardContext';
 
 Chart.register(...registerables);
 
 function LandingPage() {
+    const { loading, error, allRecapData } = useContext(DashboardContext);
     const chartRef = useRef(null);
 
     useEffect(() => {
@@ -82,10 +84,10 @@ function LandingPage() {
         });
 
         return () => {
-            myChart.destroy(); 
+            myChart.destroy();
         };
     }, []);
-    
+
     return (
         <>
             <Navbar />
@@ -100,7 +102,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Total Produk</h3>
-                            <p className="text-2xl font-bold">1,234</p>
+                            <p className="text-2xl font-bold">{allRecapData.totalProduct}</p>
                         </div>
                     </div>
 
@@ -112,7 +114,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Produk Terjual</h3>
-                            <p className="text-2xl font-bold">567</p>
+                            <p className="text-2xl font-bold">{allRecapData.totalProductSold}</p>
                         </div>
                     </div>
 
@@ -124,7 +126,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Total Transaksi</h3>
-                            <p className="text-2xl font-bold">89</p>
+                            <p className="text-2xl font-bold">{allRecapData.totalTransaction}</p>
                         </div>
                     </div>
 
@@ -136,7 +138,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Total Pendapatan</h3>
-                            <p className="text-2xl font-bold">Rp 12,345</p>
+                            <p className="text-2xl font-bold">Rp {allRecapData.totalIncome}</p>
                         </div>
                     </div>
                 </div>
