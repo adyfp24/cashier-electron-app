@@ -5,7 +5,7 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
         nama: '',
         stok: 0,
         harga: 0,
-        jenis_produk: '',
+        jenis_produk: '1',
         gambar: null
     });
 

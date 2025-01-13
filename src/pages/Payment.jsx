@@ -104,8 +104,7 @@ function Payment() {
                                     {cart.length !== 0 ? cart.map((item) => (
                                         <div key={item.productId} className="mb-2 space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                             <a href="#" className="overflow-hidden rounded">
-                                                <img className="w-10 h-10 mx-auto dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg" alt="imac image" />
-                                                <img className="hidden w-10 h-10 mx-auto dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg" alt="imac image" />
+                                                <img className="w-10 h-10 mx-auto" src={item.gambar} alt="product image" />
                                             </a>
                                             <div className="flex items-center justify-between space-x-8 md:order-3 md:justify-end">
                                                 <div className="flex items-center">
@@ -142,7 +141,7 @@ function Payment() {
                                         </a>
                                         <p className="mt-3 text-lg font-semibold">{product.nama}</p>
                                         <p className="text-sm text-gray-500">{product.stok} Unit</p>
-                                        <p className="text-lg font-bold">Rp. {product.harga}</p>
+                                        <p className="text-base font-semibold text-gray-500">Rp. {product.harga}</p>
                                         <div className="mt-5 flex items-center gap-2.5">
                                             <button onClick={() => addToCart(product)} type="button" className="inline-flex w-full items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                                 <svg className="w-5 h-5 -ms-2 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

@@ -29,7 +29,7 @@ const createProduct = async (req, res) => {
             stok: parseInt(stok, 10),
             harga: parseInt(harga, 10),
             jenisProdukId: parseInt(jenis_produk, 10),
-            gambar: image
+            gambar: '/products/' + image
         }
         const newProduct = await productService.createProduct(product);
         if (newProduct) {
