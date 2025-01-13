@@ -7,7 +7,7 @@ const multer = require('../middlewares/multer');
 
 router.get('/product', productController.getAllProduct);
 router.get('/product/:id', productController.getProductById);
-router.post('/product', multer.single('image'), productController.createProduct);
+router.post('/product', multer.single('gambar'), productController.createProduct);
 router.delete('/product/:id', productController.deleteProduct);
 router.put('/product/:id', productController.updateProduct);
 

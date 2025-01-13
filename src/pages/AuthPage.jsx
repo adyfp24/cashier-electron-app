@@ -7,7 +7,7 @@ function AuthPage() {
         <>
             <section className="flex w-full h-screen main-container bg-slate-400">
                 <div className="w-1/2">
-                    <img className="h-full" src={loginImg} alt="" />
+                    <img className="h-full" src="/images/login.jpg" alt="" />
                 </div>
                 <LoginForm />
             </section>

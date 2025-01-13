@@ -9,7 +9,8 @@ const createProduct = async (product) => {
                 nama: product.nama,
                 stok: product.stok,
                 harga: product.harga,
-                jenisProdukId: product.jenisProdukId
+                jenisProdukId: product.jenisProdukId,
+                gambar: product.gambar
             }
         });
         return newProduct;

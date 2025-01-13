@@ -22,7 +22,9 @@ const getById = async (id) => {
 
 const addProduct = async (newProduct) => {
     try {
-        const response = await axios.post(API_URL, newProduct);
+        const response = await axios.post(API_URL, newProduct, {
+            headers: { 'Content-Type': 'multipart/form-data' }, 
+        });
         return response.data.data;
     } catch (e) {
         throw new Error(e.message)

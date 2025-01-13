@@ -6,6 +6,7 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
         stok: 0,
         harga: 0,
         jenis_produk: '',
+        gambar: null
     });
 
     React.useEffect(() => {
@@ -15,13 +16,20 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
                 stok: productData.stok || 0,
                 harga: productData.harga || 0,
                 jenis_produk: productData.jenis_produk || '1',
+                gambar: null
             });
         }
     }, [productData]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        const newValue = (name === 'stok' || name === 'harga' || name === 'jenis_produk') ? parseInt(value, 10) : value
+        const { name, value, files } = e.target;
+        const newValue =
+            name === 'stok' || name === 'harga' 
+                ? parseInt(value, 10)
+                : name === 'gambar'
+                ? files[0]
+                : value;
+
         setFormData((prevData) => ({
             ...prevData,
             [name]: newValue,
@@ -30,7 +38,16 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData);
+        const data = new FormData();
+        data.append('nama', formData.nama);
+        data.append('stok', formData.stok);
+        data.append('harga', formData.harga);
+        data.append('jenis_produk', formData.jenis_produk);
+        if (formData.gambar) {
+            data.append('gambar', formData.gambar);
+        }
+
+        onSubmit(data); 
         onClose();
     };
 
@@ -69,6 +86,19 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
                                         <option value="2">Mesin</option>
                                         <option value="3">Velg</option>
                                     </select>
+                                </div>
+                                <div className="sm:col-span-2">
+                                    <label htmlFor="gambar" className="block mb-2 text-sm font-medium text-gray-900">
+                                        Gambar Produk
+                                    </label>
+                                    <input
+                                        type="file"
+                                        name="gambar"
+                                        id="gambar"
+                                        accept="image/*"
+                                        onChange={handleChange}
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                    />
                                 </div>
                             </div>
                             <button type="submit" className="w-full text-white bg-blue-900 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mt-4">
