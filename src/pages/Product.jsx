@@ -73,7 +73,7 @@ function Product() {
     }
 
     if (error) {
-        return <p>Error: {error}</p>;
+        return <p>Error: {error.message || error}</p>; 
     }
 
     return (

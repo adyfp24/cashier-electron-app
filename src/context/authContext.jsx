@@ -13,13 +13,14 @@ export const AuthProvider = ({children}) => {
 
     const login = async (data) => {
         setLoading(true);
+        setError(null);
         try {
             const loggedInUser = await authService.login(data);
             localStorage.setItem('token', loggedInUser.token)
             setUser(loggedInUser);
             navigate('/dashboard');
         } catch (error) {
-            setError(error);
+            setError(error.message);
         }
         setLoading(false);
     }
