@@ -1,18 +1,23 @@
 import React, {createContext, useState, useEffect} from 'react';
 import authService from '../services/authService';
-
+import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
+
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const navigate = useNavigate();
 
     const login = async (data) => {
         setLoading(true);
         try {
             const loggedInUser = await authService.login(data);
+            localStorage.setItem('token', loggedInUser.token)
             setUser(loggedInUser);
+            navigate('/dashboard');
         } catch (error) {
             setError(error);
         }
@@ -31,8 +36,18 @@ export const AuthProvider = ({children}) => {
         setLoading(false);
     }
 
+    const logout = () => {
+        try{
+            setUser(null);
+            localStorage.removeItem('token');
+            navigate('/');
+        }catch(error){
+            setError(error)
+        }
+    }
+
     useEffect(() => {
-        
+        setIsAuthenticated(localStorage.getItem('token') ? true : false)
     }, []);
 
     return (
@@ -40,8 +55,10 @@ export const AuthProvider = ({children}) => {
             user,
             loading,
             error,
+            isAuthenticated,
             login,
-            register
+            register,
+            logout
         }}>
             {children}
         </AuthContext.Provider>
