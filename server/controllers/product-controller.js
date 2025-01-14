@@ -16,18 +16,20 @@ const getAllProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
+        const image = req.file.filename;
         const {
             nama,
             stok,
             harga,
-            jenis_produk
+            jenis_produk,
         } = req.body;
 
         const product = {
             nama,
-            stok,
-            harga,
-            jenisProdukId: jenis_produk
+            stok: parseInt(stok, 10),
+            harga: parseInt(harga, 10),
+            jenisProdukId: parseInt(jenis_produk, 10),
+            gambar: '/products/' + image
         }
         const newProduct = await productService.createProduct(product);
         if (newProduct) {

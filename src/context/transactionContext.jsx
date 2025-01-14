@@ -4,7 +4,7 @@ import transactionService from '../services/transactionService';
 export const TransactionContext = createContext();
 
 export const TransactionProvider = ({children}) => {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [transactions, setTransactions] = useState([]);
     const [transaction, setTransaction] = useState({});

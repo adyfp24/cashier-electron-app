@@ -7,7 +7,7 @@ export const ProductProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [product, setProduct] = useState({});
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const getAllProduct = async () => {
         setLoading(true);

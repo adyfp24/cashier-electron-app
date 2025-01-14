@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./:Users:adyfirdaus:Documents:project:cashier-electron-js:prisma:pos.db"
+  url      = "file:./pos.db"
 }
 
 model User {
@@ -20,6 +20,7 @@ model User {
 model Product {
   id            Int                 @id @default(autoincrement())
   nama          String
+  gambar        String
   stok          Int                 @default(0)
   harga         Float
   jenisProduk   Category            @relation(fields: [jenisProdukId], references: [id])

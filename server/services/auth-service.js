@@ -1,16 +1,16 @@
-
-const bcrypt = require('bcrypt');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 const utilsToken = require('../utils/sign-token');
 
 const login = async (username, password) => {
     try {
-        const user = await prisma.user.findUnique({ where: { username } });
+        const user = await prisma.user.findUnique({ where: { username: username } });
 
         if (!user) {
             return { success: false, message: 'Username tidak valid' };
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = password === user.password;
 
         if (isPasswordValid) {
             const apiToken = utilsToken.generateJWT(user.id);
