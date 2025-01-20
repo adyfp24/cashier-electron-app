@@ -13,7 +13,7 @@ export const ProductProvider = ({ children }) => {
         setLoading(true);
         try {
             const allProducts = await productService.getAll();
-            setProducts(allProducts);
+            setProducts(allProducts.products);
         } catch (err) {
             setError(err);
         }

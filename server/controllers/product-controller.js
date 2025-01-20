@@ -1,11 +1,12 @@
 const productService = require('../services/product-service');
-const { successResponse, clientErrorResponse, errorResponse, 
-        createdResponse, notFoundResponse } = require('../middlewares/response');
+const { successResponse, clientErrorResponse, errorResponse,
+    createdResponse, notFoundResponse } = require('../middlewares/response');
 
 const getAllProduct = async (req, res) => {
     try {
-        const allProducts = await productService.getAllProduct();
-        if(allProducts == 0){
+        const { page, limit } = req.pagination;
+        const allProducts = await productService.getAllProduct(page, limit);
+        if (allProducts == 0) {
             return notFoundResponse(res, "data produk tidak tersedia")
         }
         return successResponse(res, allProducts, "data produk berhasil didapat");
@@ -45,10 +46,11 @@ const createProduct = async (req, res) => {
 const getProductById = async (req, res) => {
     try {
         const productId = req.params.id;
+
         const product = await productService.getProductById(productId);
-        if(product != 0){
+        if (product != 0) {
             return successResponse(res, product, "data produk dengan id tersebut tersedia")
-        }else{
+        } else {
             return notFoundResponse(res, "data produk dengan id tersebut tidak tersedia");
         }
     } catch (error) {
@@ -60,9 +62,9 @@ const deleteProduct = async (req, res) => {
     try {
         const productId = req.params.id;
         const deletedProduct = await productService.deleteProduct(productId);
-        if(deletedProduct){
+        if (deletedProduct) {
             return successResponse(res, "data produk berhasil dihapus")
-        }else{
+        } else {
             return notFoundResponse(res, "data produk gagal dihapus karena id tidak valid");
         };
     } catch (error) {
@@ -87,9 +89,9 @@ const updateProduct = async (req, res) => {
         }
         const productId = req.params.id;
         const updatedProduct = await productService.updateProduct(productId, product);
-        if(updatedProduct){
+        if (updatedProduct) {
             return successResponse(res, "data produk berhasil diperbarui")
-        }else{
+        } else {
             return notFoundResponse(res, "data produk gagal diperbarui karena id tidak valid");
         };
     } catch (error) {
