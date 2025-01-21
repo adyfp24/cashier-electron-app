@@ -19,16 +19,30 @@ const createProduct = async (product) => {
     }
 }
 
-const getAllProduct = async () => {
+const getAllProduct = async (page, limit) => {
     try {
-        const allProduct = await prisma.product.findMany(
+        const offset = (page - 1) * limit;
+        const allProducts = await prisma.product.findMany(
             {
+                skip: offset,
+                take: limit,
                 include: {
                     jenisProduk: true,             
                 }
             }
         );
-        return allProduct;
+        const totalProducts = await prisma.product.count();
+        const totalPage = Math.ceil(totalProducts / limit);
+
+        return {
+            products: allProducts,
+            pagination: {
+                page,
+                limit,
+                total: totalProducts,
+                totalPage,
+            },
+        };
     } catch (error) {
         throw new Error('internal server error :' + error.message);
     }
