@@ -34,6 +34,17 @@ export const TransactionProvider = ({children}) => {
         setLoading(false);
     }
 
+    const exportTransactionHistory = async () => {
+        setLoading(true);
+        setError(null);
+        try{
+            await transactionService.exportTransactionHistory();
+        }catch(error){
+            setError(error.message);
+        }
+        setLoading(false);
+    }
+
     useEffect(() => {
         getAllTransaction();
     }, []);
@@ -44,8 +55,10 @@ export const TransactionProvider = ({children}) => {
             error,
             transactions,
             transaction,
+            pagination,
             getAllTransaction,
-            getTransactionById
+            getTransactionById,
+            exportTransactionHistory
         }}>
             {children}
         </TransactionContext.Provider>

@@ -77,6 +77,7 @@ export const ProductProvider = ({ children }) => {
                 products,
                 error,
                 loading,
+                pagination,
                 addProduct,
                 deleteProduct,
                 updateProduct,

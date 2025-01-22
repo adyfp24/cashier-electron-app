@@ -5,7 +5,7 @@ import { TransactionContext } from '../context/transactionContext';
 import ModalDetailHistory from '../components/fragments/ModalDetailHistory';
 
 function TransactionHistory() {
-    const { loading, error, transactions } = useContext(TransactionContext);
+    const { loading, error, transactions, exportTransactionHistory } = useContext(TransactionContext);
     const [filteredTransactions, setFilteredTransactions] = useState([]);
     const [filterPeriod, setFilterPeriod] = useState('all');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -112,7 +112,7 @@ function TransactionHistory() {
                             </div>
                             <div className="flex flex-col items-stretch flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
                                 <button
-                                    onClick={exportReport}
+                                    onClick={exportTransactionHistory}
                                     className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
                                 >
                                     <svg className="h-3.5 w-3.5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
