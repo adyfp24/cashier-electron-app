@@ -8,12 +8,14 @@ export const ProductProvider = ({ children }) => {
     const [product, setProduct] = useState({});
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [pagination, setPagination] = useState({})
 
     const getAllProduct = async () => {
         setLoading(true);
         try {
             const allProducts = await productService.getAll();
             setProducts(allProducts.products);
+            setPagination(allProducts.pagination);
         } catch (err) {
             setError(err);
         }

@@ -8,14 +8,15 @@ export const TransactionProvider = ({children}) => {
     const [error, setError] = useState(null);
     const [transactions, setTransactions] = useState([]);
     const [transaction, setTransaction] = useState({});
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [pagination, setPagination] = useState({});
 
     const getAllTransaction = async () => {
         setLoading(true);
         try {
             const allData = await transactionService.getAllTransaction();
             console.log(allData);
-            setTransactions(allData);
+            setTransactions(allData.transactions);
+            setPagination(allData.pagination);
         } catch (error) {
             setError(error.message)
         }

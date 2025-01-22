@@ -3,7 +3,8 @@ const { successResponse, clientErrorResponse, errorResponse } = require('../midd
 
 const getAllTransaction = async (req, res) => {
     try {
-        const transactions = await transactionService.getAllTransaction();
+        const {page, limit} = req.pagination;
+        const transactions = await transactionService.getAllTransaction(page, limit);
         if(transactions.length == 0){
             return clientErrorResponse(res, "data transaksi tidak tersedia")
         }
