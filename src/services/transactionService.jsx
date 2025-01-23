@@ -27,7 +27,15 @@ const exportTransactionHistory = async () => {
         const response = await axios.get(`${API_URL}/export`, {
             responseType: 'blob', 
         });
-        return response;
+
+        const blob = new Blob([response.data], { type: response.headers['content-type'] });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'riwayat-transaksi.xlsx'); // Nama file unduhan
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
     } catch (e) {
         throw new Error(e.message)
     }

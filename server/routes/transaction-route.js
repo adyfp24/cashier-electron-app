@@ -4,6 +4,7 @@ const transactionController = require('../controllers/transaction-controller');
 const pagination = require('../middlewares/pagination');
 
 router.get('/transaction', pagination, transactionController.getAllTransaction);
+router.get('/transaction/export', transactionController.exportTransactionHistory)
 router.get('/transaction/:id', transactionController.getTransactionById);
 
 module.exports = router;

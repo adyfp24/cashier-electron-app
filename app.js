@@ -3,8 +3,15 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors({
+    origin: '*', 
+    methods: '*',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 const authRoute = require('./server/routes/auth-route');
 const productRoute = require('./server/routes/product-route');

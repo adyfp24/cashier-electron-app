@@ -27,7 +27,20 @@ const getTransactionById = async (req, res) => {
     }
 }
 
+const exportTransactionHistory = async (req, res) => {
+    try {
+        const transactionBuffer = await transactionService.exportTransactionHistory();
+        res.setHeader('Content-Disposition', 'attachment; filename="riwayat-transaksi.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        res.send(transactionBuffer);
+    } catch (error) {
+        return errorResponse(res, error);
+    }
+}
+
 module.exports = {
     getAllTransaction,
-    getTransactionById
+    getTransactionById,
+    exportTransactionHistory
 }

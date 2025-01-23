@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const excelJs = require('exceljs');
 
 const getAllTransaction = async (page, limit) => {
     try {
@@ -54,7 +55,48 @@ const getTransactionById = async (id) => {
     }
 };
 
+const exportTransactionHistory = async () => {
+    try {
+        const transactions = await prisma.transaction.findMany({
+            include: {
+                details: {
+                    include: {
+                        product: true,
+                    },
+                },
+            },
+        });
+
+        const workbook = new excelJs.Workbook();
+        const worksheet = workbook.addWorksheet('Transaction History');
+
+        worksheet.columns = [
+            { header: 'ID', key: 'id', width: 10 },
+            { header: 'Tanggal', key: 'tanggal', width: 20 },
+            { header: 'Total', key: 'total', width: 15 },
+            { header: 'Detail', key: 'detail', width: 30 },
+        ];
+
+        transactions.forEach((transaction) => {
+            transaction.details.forEach((detail, index) => {
+                worksheet.addRow({
+                    id: index === 0 ? transaction.id : '', 
+                    tanggal: index === 0 ? transaction.tanggal.toISOString().split('T')[0] : '', 
+                    total: index === 0 ? transaction.total : '', 
+                    detail: `Nama: ${detail.product.nama}, Kuantitas: ${detail.quantity}, Subtotal: ${detail.subtotal}`, 
+                });
+            });
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        return buffer;
+    } catch (error) {
+        throw new Error('internal server error :' + error.message);
+    }
+};
+
 module.exports = {
     getAllTransaction,
-    getTransactionById
+    getTransactionById,
+    exportTransactionHistory
 }
