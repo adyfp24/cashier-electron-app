@@ -73,8 +73,8 @@ const exportTransactionHistory = async () => {
         worksheet.columns = [
             { header: 'ID', key: 'id', width: 10 },
             { header: 'Tanggal', key: 'tanggal', width: 20 },
-            { header: 'Total', key: 'total', width: 15 },
-            { header: 'Detail', key: 'detail', width: 30 },
+            { header: 'Total', key: 'total', width: 20 },
+            { header: 'Detail', key: 'detail', width: 60 },
         ];
 
         transactions.forEach((transaction) => {
@@ -86,6 +86,15 @@ const exportTransactionHistory = async () => {
                     detail: `Nama: ${detail.product.nama}, Kuantitas: ${detail.quantity}, Subtotal: ${detail.subtotal}`, 
                 });
             });
+        });
+
+        worksheet.getRow(1).eachCell((cell) => {
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFFF00' },
+            };
+            cell.font = { bold: true }; 
         });
 
         const buffer = await workbook.xlsx.writeBuffer();

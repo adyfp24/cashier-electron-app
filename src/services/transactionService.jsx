@@ -32,7 +32,7 @@ const exportTransactionHistory = async () => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'riwayat-transaksi.xlsx'); // Nama file unduhan
+        link.setAttribute('download', 'riwayat-transaksi.xlsx'); 
         document.body.appendChild(link);
         link.click();
         link.remove();
