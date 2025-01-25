@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import { ProductContext } from '../context/productContext';
@@ -78,7 +78,12 @@ function Payment() {
         setPopUpConfirm(false);
         try {
             await createPayment(cart);
-            navigate('/receipt');
+            navigate("/receipt", {
+                state: {
+                    cartItems: cart,
+                    total: total
+                }
+            })
             setCart([]);
             setTotal(0);
         } catch (err) {
