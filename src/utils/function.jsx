@@ -3,3 +3,13 @@ export const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('id-ID', options); 
 };
+
+export const formatRupiah = (amount) => {
+    if (isNaN(amount)) {
+        return 'Invalid amount';
+    }
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+    }).format(amount);
+}
