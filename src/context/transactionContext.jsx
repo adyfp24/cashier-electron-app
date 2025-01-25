@@ -1,5 +1,6 @@
 import React, {createContext, useState, useEffect} from 'react'
 import transactionService from '../services/transactionService';
+import { useLocation } from 'react-router-dom';
 
 export const TransactionContext = createContext();
 
@@ -9,6 +10,7 @@ export const TransactionProvider = ({children}) => {
     const [transactions, setTransactions] = useState([]);
     const [transaction, setTransaction] = useState({});
     const [pagination, setPagination] = useState({});
+    const location = useLocation();
 
     const getAllTransaction = async () => {
         setLoading(true);
@@ -47,7 +49,7 @@ export const TransactionProvider = ({children}) => {
 
     useEffect(() => {
         getAllTransaction();
-    }, []);
+    }, [location.pathname]);
 
     return (
         <TransactionContext.Provider value={{

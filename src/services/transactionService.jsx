@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const API_URL = '/api/transaction';
-const excelJs = require('exceljs');
 
 const getAllTransaction = async () => {
     try {

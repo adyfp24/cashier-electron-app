@@ -22,7 +22,7 @@ function TransactionHistory() {
     };
 
     useEffect(() => {
-        if(transactions){
+        if (transactions) {
             setFilteredTransactions(transactions);
         }
     }, [transactions]);
@@ -70,9 +70,15 @@ function TransactionHistory() {
         console.log('Exporting report...');
     };
 
-    if(loading){
+    if (loading) {
         return (
             <p>loading...</p>
+        )
+    }
+
+    if (error) {
+        return (
+            <p>{error.message}</p>
         )
     }
 
@@ -134,28 +140,28 @@ function TransactionHistory() {
                                     </tr>
                                 </thead>
                                 {filteredTransactions && filteredTransactions.length !== 0 ? (
-        filteredTransactions.map((transaction, index) => (
-            <tr key={transaction.id} className="border-b dark:border-gray-700">
-                <td className="px-4 py-3">{index + 1}</td>
-                <td className="px-4 py-3">{transaction.tanggal}</td>
-                <td className="px-4 py-3">Rp. {transaction.total.toFixed(2)}</td>
-                <td className="px-4 py-3">
-                    <button
-                        onClick={() => handleDetailClick(transaction)}
-                        className="px-4 py-2 font-semibold text-gray-900 border border-2 border-gray-200 rounded rounded-lg"
-                    >
-                        Detail
-                    </button>
-                </td>
-            </tr>
-        ))
-    ) : (
-        <tr>
-            <td colSpan="4" className="px-4 py-3 text-center">
-                Belum ada riwayat transaksi
-            </td>
-        </tr>
-    )}
+                                    filteredTransactions.map((transaction, index) => (
+                                        <tr key={transaction.id} className="border-b dark:border-gray-700">
+                                            <td className="px-4 py-3">{index + 1}</td>
+                                            <td className="px-4 py-3">{transaction.tanggal}</td>
+                                            <td className="px-4 py-3">Rp. {transaction.total.toFixed(2)}</td>
+                                            <td className="px-4 py-3">
+                                                <button
+                                                    onClick={() => handleDetailClick(transaction)}
+                                                    className="px-4 py-2 font-semibold text-gray-900 border border-2 border-gray-200 rounded rounded-lg"
+                                                >
+                                                    Detail
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className="px-4 py-3 text-center">
+                                            Belum ada riwayat transaksi
+                                        </td>
+                                    </tr>
+                                )}
                             </table>
                         </div>
                         <nav className="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0" aria-label="Table navigation">
