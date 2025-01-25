@@ -137,7 +137,7 @@ function Payment() {
                                 {filteredProducts.length ? filteredProducts.map((product) => (
                                     <div key={product.id} className="p-6 bg-white border rounded-lg">
                                         <a href="#" className="overflow-hidden rounded">
-                                            <img className="mx-auto h-28 w-28" src={product.gambar} alt="product image" />
+                                            <img className="mx-auto h-28 w-28" src={product?.gambar || ''} alt="product image" />
                                         </a>
                                         <p className="mt-3 text-lg font-semibold">{product.nama}</p>
                                         <p className="text-sm text-gray-500">{product.stok} Unit</p>

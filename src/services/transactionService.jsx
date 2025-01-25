@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const API_URL = '/api/transaction';
 
-const getAllTransaction = async () => {
+const getAllTransaction = async (page) => {
     try {
-        const response = await axios.get(API_URL);
+        const response = await axios.get(`${API_URL}?page=${page}`);
         console.log(response.data.data);
         return response.data.data;
     } catch (e) {

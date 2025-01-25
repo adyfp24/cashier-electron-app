@@ -12,10 +12,10 @@ export const ProductProvider = ({ children }) => {
     const [pagination, setPagination] = useState({});
     const location = useLocation();
 
-    const getAllProduct = async () => {
+    const getAllProduct = async (page = 1) => {
         setLoading(true);
         try {
-            const allProducts = await productService.getAll();
+            const allProducts = await productService.getAll(page);
             setProducts(allProducts.products);
             setPagination(allProducts.pagination);
         } catch (err) {

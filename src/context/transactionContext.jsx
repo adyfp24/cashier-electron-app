@@ -12,10 +12,10 @@ export const TransactionProvider = ({children}) => {
     const [pagination, setPagination] = useState({});
     const location = useLocation();
 
-    const getAllTransaction = async () => {
+    const getAllTransaction = async (page = 1) => {
         setLoading(true);
         try {
-            const allData = await transactionService.getAllTransaction();
+            const allData = await transactionService.getAllTransaction(page);
             console.log(allData);
             setTransactions(allData.transactions);
             setPagination(allData.pagination);
