@@ -3,6 +3,7 @@ import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import { Chart, registerables } from 'chart.js';
 import { DashboardContext } from '../context/dashboardContext';
+import { formatRupiah } from '../utils/function';
 
 Chart.register(...registerables);
 
@@ -102,7 +103,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Total Produk</h3>
-                            <p className="text-2xl font-bold">{allRecapData.totalProduct ?? 0}</p>
+                            <p className="text-lg font-bold">{allRecapData.totalProduct ?? 0}</p>
                         </div>
                     </div>
 
@@ -114,7 +115,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Produk Terjual</h3>
-                            <p className="text-2xl font-bold">{allRecapData.totalProductSold ?? 0}</p>
+                            <p className="font-bold text-handleLogout">{allRecapData.totalProductSold ?? 0}</p>
                         </div>
                     </div>
 
@@ -126,7 +127,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Total Transaksi</h3>
-                            <p className="text-2xl font-bold">{allRecapData.totalTransaction ?? 0}</p>
+                            <p className="text-lg font-bold">{allRecapData.totalTransaction ?? 0}</p>
                         </div>
                     </div>
 
@@ -138,7 +139,7 @@ function LandingPage() {
                         </div>
                         <div className="ml-4">
                             <h3 className="text-lg font-semibold text-gray-700">Total Pendapatan</h3>
-                            <p className="text-2xl font-bold">Rp {allRecapData.totalIncome ?? 0}</p>
+                            <p className="text-lg font-bold">{formatRupiah(allRecapData.totalIncome) ?? 0}</p>
                         </div>
                     </div>
                 </div>

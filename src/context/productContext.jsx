@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import productService from '../services/productService'; // Mengimpor productService
+import { useLocation } from 'react-router-dom';
 
 export const ProductContext = createContext();
 
@@ -8,12 +9,13 @@ export const ProductProvider = ({ children }) => {
     const [product, setProduct] = useState({});
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [pagination, setPagination] = useState({})
+    const [pagination, setPagination] = useState({});
+    const location = useLocation();
 
-    const getAllProduct = async () => {
+    const getAllProduct = async (page = 1) => {
         setLoading(true);
         try {
-            const allProducts = await productService.getAll();
+            const allProducts = await productService.getAll(page);
             setProducts(allProducts.products);
             setPagination(allProducts.pagination);
         } catch (err) {
@@ -68,7 +70,7 @@ export const ProductProvider = ({ children }) => {
 
     useEffect(() => {
         getAllProduct();
-    }, []);
+    }, [location.pathname]);
 
     return (
         <ProductContext.Provider

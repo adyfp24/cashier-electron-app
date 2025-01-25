@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const API_URL = '/api/product';
 
-const getAll = async () => {
+const getAll = async (page) => {
     try {
-        const response = await axios.get(API_URL);
+        const response = await axios.get(`${API_URL}?page=${page}`);
         return response.data.data;
     } catch (e) {
         throw new Error(e.message)
