@@ -7,6 +7,7 @@ import Payment from './pages/Payment'
 import Receipt from './pages/Receipt'
 import AuthPage from './pages/AuthPage'
 import TransactionHistory from './pages/TransactionHistory'
+import Setting from './pages/Setting'
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
             <Route path='/payment' element={<Payment />}></Route>
             <Route path='/receipt' element={<Receipt />}></Route>
             <Route path='/history' element={<TransactionHistory />}></Route>
+            <Route path='/setting' element={<Setting />}></Route>
         </Routes>
     )
 }

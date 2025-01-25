@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/authContext';
 
 function Sidebar() {
   const { user, logout } = useContext(AuthContext);
-  const location = useLocation(); 
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -59,14 +59,24 @@ function Sidebar() {
               </a>
             </li>
           </Link>
+          <Link to='/setting'>
+            <li className={`${isActive('/setting')} hover:bg-gray-100 rounded-lg`}>
+              <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white group">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
+                  <path fillRule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l.84.692c.095.078.169.229.154.43a7.598 7.598 0 0 0 0 1.139c.015.2-.059.352-.154.43l-.84.692a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.819l1.017-.435c.115-.043.283-.031.45.083.312.214.641.405.986.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.917 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.312-.214.641-.405.986-.57.166-.115.335-.126.45-.083l1.017.436a1.875 1.875 0 0 0 2.282-.819l.922-1.597a1.875 1.875 0 0 0-.432-2.385l-.84-.692c-.095-.078-.169-.229-.154-.43a7.598 7.598 0 0 0 0-1.139c-.015-.2.059-.352.154-.43l.84-.692a1.875 1.875 0 0 0 .432-2.385l-.922-1.597a1.875 1.875 0 0 0-2.282-.819l-1.017.435c-.115.043-.283.031-.45-.083a7.49 7.49 0 0 0-.986-.57c-.182-.088-.277-.228-.297-.349l-.179-1.072a1.875 1.875 0 0 0-1.85-1.567h-1.844ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clipRule="evenodd" />
+                </svg>
+                <span className="flex-1 ms-3 whitespace-nowrap">Setting</span>
+              </a>
+            </li>
+          </Link>
           <li onClick={handleLogout}>
-                <a class="flex items-center hover:cursor-pointer p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                  <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3" />
-                  </svg>
-                  <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>
-                </a>
-              </li>
+            <a class="flex items-center justify-center hover:cursor-pointer p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+              <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3" />
+              </svg>
+              <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>
+            </a>
+          </li>
         </ul>
       </div>
     </aside>
