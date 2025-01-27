@@ -154,10 +154,12 @@ function Product() {
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-4 py-3">Nama Produk</th>
+                                        <th scope="col" class="px-4 py-3">Kode</th>
                                         <th scope="col" class="px-4 py-3">Kategori</th>
                                         <th scope="col" class="px-4 py-3">Merk</th>
                                         <th scope="col" class="px-4 py-3">Stok</th>
-                                        <th scope="col" class="px-4 py-3">Harga</th>
+                                        <th scope="col" class="px-4 py-3">Harga Jual</th>
+                                        <th scope="col" class="px-4 py-3">Harga Beli</th>
                                         <th scope="col" class="px-4 py-3">
                                             <span class="sr-only">Actions</span>
                                         </th>
@@ -169,9 +171,11 @@ function Product() {
                                             <td scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {product.nama}
                                             </td>
+                                            <td className="px-4 py-3">77hhdg6</td>
                                             <td className="px-4 py-3">{product.jenisProduk ? product.jenisProduk.name : "null"}</td>
                                             <td className="px-4 py-3">Yamaha</td>
                                             <td className="px-4 py-3">{product.stok}</td>
+                                            <td className="px-4 py-3">{product.harga}</td>
                                             <td className="px-4 py-3">{product.harga}</td>
                                             <td className="px-4 py-3">
                                                 <div className="relative flex justify-end">

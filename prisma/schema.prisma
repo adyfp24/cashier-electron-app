@@ -21,8 +21,10 @@ model Product {
   id            Int                 @id @default(autoincrement())
   nama          String
   gambar        String
+  kode          String
   stok          Int                 @default(0)
   harga         Float
+  hargaBeli     Float
   jenisProduk   Category            @relation(fields: [jenisProdukId], references: [id])
   jenisProdukId Int                 @map("jenis_id")
   createdAt     DateTime            @default(now())

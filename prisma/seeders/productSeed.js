@@ -7,6 +7,8 @@ async function seed(){
             {
                 'nama': 'product A',
                 'harga': 5000,
+                'hargaBeli': 50000,
+                'kode': '32FF1Q',
                 'stok' : 5,
                 'jenisProdukId' : 1,
                 'gambar': '/products/product_a.png'
@@ -14,6 +16,8 @@ async function seed(){
             {
                 'nama': 'product B',
                 'harga': 10000,
+                'hargaBeli': 50000,
+                'kode': '32FF1Q',
                 'stok' : 3,
                 'jenisProdukId' : 2,
                 'gambar': '/products/product_b.png'
@@ -21,6 +25,8 @@ async function seed(){
             {
                 'nama': 'product C',
                 'harga': 7000,
+                'hargaBeli': 50000,
+                'kode': '32FF1Q',
                 'stok' : 10,
                 'jenisProdukId' : 3,
                 'gambar': '/products/product_c.png'
