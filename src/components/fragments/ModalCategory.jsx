@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 function CategoryModal({ isOpen, onSubmit, onClose }) {
 
     const [formData, setFormdata] = useState({
-        nama: '',
+        nama_kategori: '',
     });
 
     const handleChange = (e) => {
@@ -37,8 +37,8 @@ function CategoryModal({ isOpen, onSubmit, onClose }) {
                         <form onSubmit={handleSubmit}>
                             <div className="grid gap-4 mb-4">
                                 <div className='w-full'>
-                                    <label htmlFor="nama" className="block mb-2 text-sm font-medium text-gray-900">Nama Kategori</label>
-                                    <input type="text" name="nama" id="nama" value={formData.nama} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan nama kategori baru" required />
+                                    <label htmlFor="nama_kategori" className="block mb-2 text-sm font-medium text-gray-900">Nama Kategori</label>
+                                    <input type="text" name="nama_kategori" id="nama_kategori" value={formData.nama_kategori} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan nama kategori baru" required />
                                 </div>
                             </div>
                             <button type="submit" className="w-full text-white bg-blue-900 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mt-4">

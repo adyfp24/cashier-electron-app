@@ -31,6 +31,15 @@ const addProduct = async (newProduct) => {
     }
 };
 
+const addCategory = async (newCategory) => {
+    try {
+        const response = await axios.post('/api/category', newCategory);
+        return response.data.data;
+    } catch (e) {
+        throw new Error(e.message)
+    }
+};
+
 const deleteProduct = async (id) => {
     try {
         const response = await axios.delete(`${API_URL}/${id}`);
@@ -55,6 +64,7 @@ export default {
     getAll,
     getById,
     addProduct,
+    addCategory,
     deleteProduct,
     updateProduct
 };

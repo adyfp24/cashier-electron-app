@@ -252,7 +252,7 @@ function Product() {
                 onClose={() => {
                     setModalCategoryOpen(false)
                 }}
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmitCategory}
             ></CategoryModal>
         </>
     )

@@ -6,7 +6,7 @@ const getAllProduct = async (req, res) => {
     try {
         const { page, limit } = req.pagination;
         const allProducts = await productService.getAllProduct(page, limit);
-        if (allProducts == 0) {
+        if (allProducts.length == 0) {
             return notFoundResponse(res, "data produk tidak tersedia")
         }
         return successResponse(res, allProducts, "data produk berhasil didapat");

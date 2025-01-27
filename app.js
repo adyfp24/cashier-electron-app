@@ -18,6 +18,7 @@ const productRoute = require('./server/routes/product-route');
 const paymentRoute = require('./server/routes/payment-route');
 const transactionRoute = require('./server/routes/transaction-route');
 const recapRoute = require('./server/routes/recap-route');
+const categoryRoute = require('./server/routes/category-route');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,6 +31,7 @@ app.use('/api', productRoute);
 app.use('/api', paymentRoute);
 app.use('/api', transactionRoute);
 app.use('/api', recapRoute);
+app.use('/api', categoryRoute);
 
 app.use(function (req, res, next) {
   next(createError(404));

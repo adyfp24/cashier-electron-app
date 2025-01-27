@@ -46,6 +46,16 @@ export const ProductProvider = ({ children }) => {
         setLoading(false);
     };
 
+    const addCategory = async (newData) => {
+        setLoading(true);
+        try {
+            await productService.addCategory(newData);
+        } catch (err) {
+            setError(err);
+        }
+        setLoading(false);
+    };
+
     const deleteProduct = async (id) => {
         setLoading(true);
         try {
@@ -81,6 +91,7 @@ export const ProductProvider = ({ children }) => {
                 loading,
                 pagination,
                 addProduct,
+                addCategory,
                 deleteProduct,
                 updateProduct,
                 getAllProduct,
