@@ -30,7 +30,7 @@ const getAllProduct = async (page, limit) => {
                 skip: offset,
                 take: limit,
                 include: {
-                    jenisProduk: true,             
+                    jenisProduk: true,
                 }
             }
         );
@@ -55,7 +55,7 @@ const getProductById = async (productId) => {
     try {
         const product = await prisma.product.findUnique({
             where: { id: parseInt(productId) },
-            include:{
+            include: {
                 jenisProduk: true
             }
         });
@@ -67,9 +67,18 @@ const getProductById = async (productId) => {
 
 const deleteProduct = async (productId) => {
     try {
+        const existingOrders = await prisma.detailTransaction.count({
+            where: { productId: productId },
+        });
+
+        if (existingOrders > 0) {
+            return 'Product cannot be deleted because there are orders related to it.';
+        }
+
         const deletedProduct = await prisma.product.delete({
             where: { id: parseInt(productId) }
         });
+        
         return deletedProduct;
     } catch (error) {
         throw new Error('internal server error :' + error.message);
@@ -89,7 +98,7 @@ const updateProduct = async (productId, productUpdate) => {
                 kode: productUpdate.kode,
                 jenisProdukId: productUpdate.jenisProdukId,
                 updatedAt: new Date()
-              }
+            }
         });
         console.log('Updated product from Prisma:', updatedProduct);
         return updatedProduct;

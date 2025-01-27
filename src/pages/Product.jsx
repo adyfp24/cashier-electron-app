@@ -5,21 +5,35 @@ import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import ProductModal from '../components/fragments/ModalProduct';
 import Pagination from '../components/fragments/Pagination';
+import CategoryModal from '../components/fragments/ModalCategory';
 
 function Product() {
-    const { products, error, loading, addProduct,
+    const { products, error, loading, addProduct, addCategory,
         deleteProduct, updateProduct, pagination, getAllProduct } = useContext(ProductContext);
     const [dropdownOpen, setDropdownOpen] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
 
     const [isModalOpen, setModalOpen] = useState(false)
+    const [isModalCategoryOpen, setModalCategoryOpen] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState(null)
     const navigate = useNavigate()
 
     const handleAddProduct = () => {
         setSelectedProduct(null)
         setModalOpen(true)
+    }
+
+    const handleAddCategory = () => {
+        setModalCategoryOpen(true)
+    }
+
+    const handleSubmitCategory = async (data) => {
+        try {
+            await addCategory(data)
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     const handleEditProduct = (product) => {
@@ -52,11 +66,11 @@ function Product() {
             setDropdownOpen(productId);
         }
 
-    };            
-    
+    };
+
     const setPage = (page) => {
         getAllProduct(page)
-    }                                                                                               
+    }
 
     useEffect(() => {
         if (searchQuery === '') {
@@ -106,11 +120,18 @@ function Product() {
                                 </form>
                             </div>
                             <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                                <button onClick={handleAddCategory} type="button" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    <svg class="h-3.5 w-3.5 mr-2 text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                    </svg>
+                                    Tambah Kategori
+                                </button>
+
                                 <button onClick={handleAddProduct} type="button" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                     <svg class="h-3.5 w-3.5 mr-2 text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                         <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                                     </svg>
-                                    Add product
+                                    Tambah Produk
                                 </button>
 
                                 <div class="flex items-center space-x-3 w-full md:w-auto">
@@ -195,13 +216,10 @@ function Product() {
                                                     {dropdownOpen === product.id && (
                                                         <div className="absolute right-0 z-50 mt-1 bg-white divide-y divide-gray-100 rounded shadow w-28 top-full dark:bg-gray-700 dark:divide-gray-600">
                                                             <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
-                                                                <li onClick={() => { }} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                                    Show
-                                                                </li>
                                                                 <li onClick={() => handleEditProduct(product)} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Edit
                                                                 </li>
-                                                                <li onClick={() => {}} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                <li onClick={() => deleteProduct(product.id)} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Hapus
                                                                 </li>
                                                             </ul>
@@ -228,6 +246,14 @@ function Product() {
                 productData={selectedProduct}
                 onSubmit={handleSubmit}
             ></ProductModal>
+
+            <CategoryModal
+                isOpen={isModalCategoryOpen}
+                onClose={() => {
+                    setModalCategoryOpen(false)
+                }}
+                onSubmit={handleSubmit}
+            ></CategoryModal>
         </>
     )
 }
