@@ -22,6 +22,9 @@ const createProduct = async (req, res) => {
             nama,
             stok,
             harga,
+            merk,
+            kode,
+            hargaBeli,
             jenis_produk,
         } = req.body;
 
@@ -29,6 +32,9 @@ const createProduct = async (req, res) => {
             nama,
             stok: parseInt(stok, 10),
             harga: parseInt(harga, 10),
+            hargaBeli: parseInt(hargaBeli, 10),
+            merk,
+            kode,
             jenisProdukId: parseInt(jenis_produk, 10),
             gambar: '/products/' + image
         }
@@ -78,19 +84,26 @@ const updateProduct = async (req, res) => {
             nama,
             stok,
             harga,
-            jenis_produk
+            merk,
+            kode,
+            hargaBeli,
+            jenis_produk,
         } = req.body;
 
         const product = {
             nama,
-            stok,
-            harga,
-            jenisProdukId: jenis_produk
+            stok: parseInt(stok, 10),
+            harga: parseInt(harga, 10),
+            hargaBeli: parseInt(hargaBeli, 10),
+            merk,
+            kode,
+            jenisProdukId: parseInt(jenis_produk, 10)
         }
+
         const productId = req.params.id;
         const updatedProduct = await productService.updateProduct(productId, product);
         if (updatedProduct) {
-            return successResponse(res, "data produk berhasil diperbarui")
+            return successResponse(res, updatedProduct, "data produk berhasil diperbarui")
         } else {
             return notFoundResponse(res, "data produk gagal diperbarui karena id tidak valid");
         };

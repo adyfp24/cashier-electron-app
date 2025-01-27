@@ -23,6 +23,7 @@ function Product() {
     }
 
     const handleEditProduct = (product) => {
+        console.log("Editing product: ", product);
         setSelectedProduct(product)
         setModalOpen(true)
     }
@@ -30,7 +31,8 @@ function Product() {
     const handleSubmit = async (data) => {
         try {
             if (selectedProduct) {
-                await updateProduct(data)
+                await updateProduct(selectedProduct.id, data)
+                navigate('/product')
             } else {
                 await addProduct(data)
                 console.log(data)
@@ -171,12 +173,12 @@ function Product() {
                                             <td scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {product.nama}
                                             </td>
-                                            <td className="px-4 py-3">77hhdg6</td>
+                                            <td className="px-4 py-3">{product.kode}</td>
                                             <td className="px-4 py-3">{product.jenisProduk ? product.jenisProduk.name : "null"}</td>
-                                            <td className="px-4 py-3">Yamaha</td>
+                                            <td className="px-4 py-3">{product.merk}</td>
                                             <td className="px-4 py-3">{product.stok}</td>
                                             <td className="px-4 py-3">{product.harga}</td>
-                                            <td className="px-4 py-3">{product.harga}</td>
+                                            <td className="px-4 py-3">{product.hargaBeli}</td>
                                             <td className="px-4 py-3">
                                                 <div className="relative flex justify-end">
                                                     <button
@@ -196,10 +198,10 @@ function Product() {
                                                                 <li onClick={() => { }} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Show
                                                                 </li>
-                                                                <li onClick={handleEditProduct} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                <li onClick={() => handleEditProduct(product)} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Edit
                                                                 </li>
-                                                                <li onClick={handleEditProduct} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                <li onClick={() => {}} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Hapus
                                                                 </li>
                                                             </ul>

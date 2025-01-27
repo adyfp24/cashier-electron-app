@@ -3,8 +3,11 @@ import React, { useState } from 'react';
 function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
     const [formData, setFormData] = useState({
         nama: '',
+        kode: '',
         stok: 0,
+        merk: '',
         harga: 0,
+        hargaBeli: 0,
         jenis_produk: '1',
         gambar: null
     });
@@ -13,8 +16,11 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
         if (productData) {
             setFormData({
                 nama: productData.nama || '',
+                kode: productData.kode || '',
+                merk: productData.merk || '',
                 stok: productData.stok || 0,
                 harga: productData.harga || 0,
+                hargaBeli: productData.hargaBeli || 0,
                 jenis_produk: productData.jenis_produk || '1',
                 gambar: null
             });
@@ -24,7 +30,7 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         const newValue =
-            name === 'stok' || name === 'harga' 
+            name === 'stok' || name === 'harga' || name === 'harga_beli'
                 ? parseInt(value, 10)
                 : name === 'gambar'
                 ? files[0]
@@ -40,8 +46,11 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
         e.preventDefault();
         const data = new FormData();
         data.append('nama', formData.nama);
+        data.append('kode', formData.kode);
         data.append('stok', formData.stok);
         data.append('harga', formData.harga);
+        data.append('hargaBeli', formData.hargaBeli);
+        data.append('merk', formData.merk);
         data.append('jenis_produk', formData.jenis_produk);
         if (formData.gambar) {
             data.append('gambar', formData.gambar);
@@ -69,15 +78,27 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
                             <div className="grid gap-4 mb-4 sm:grid-cols-2">
                                 <div>
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Nama Produk</label>
-                                    <input type="text" name="nama" id="nama" value={formData.nama} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Type product name" required />
+                                    <input type="text" name="nama" id="nama" value={formData.nama} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan nama" required />
+                                </div>
+                                <div>
+                                    <label htmlFor="kode" className="block mb-2 text-sm font-medium text-gray-900">Kode Produk</label>
+                                    <input type="text" name="kode" id="kode" value={formData.kode} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan kode" required />
                                 </div>
                                 <div>
                                     <label htmlFor="stock" className="block mb-2 text-sm font-medium text-gray-900">Stok</label>
-                                    <input type="number" name="stok" id="stok" value={formData.stok} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Product stock" required />
+                                    <input type="number" name="stok" id="stok" value={formData.stok} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan stok" required />
                                 </div>
                                 <div>
-                                    <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900">Harga</label>
-                                    <input type="number" name="harga" id="harga" value={formData.harga} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Harga produk" required />
+                                    <label htmlFor="merk" className="block mb-2 text-sm font-medium text-gray-900">Merk</label>
+                                    <input type="text" name="merk" id="merk" value={formData.merk} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan merk" required />
+                                </div>
+                                <div>
+                                    <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900">Harga Jual</label>
+                                    <input type="number" name="harga" id="harga" value={formData.harga} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan harga jual" required />
+                                </div>
+                                <div>
+                                    <label htmlFor="hargaBeli" className="block mb-2 text-sm font-medium text-gray-900">Harga Beli</label>
+                                    <input type="number" name="hargaBeli" id="hargaBeli" value={formData.hargaBeli} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan harga beli" required />
                                 </div>
                                 <div>
                                     <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900">Kategori Produk</label>

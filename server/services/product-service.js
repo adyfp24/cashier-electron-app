@@ -10,7 +10,10 @@ const createProduct = async (product) => {
                 stok: product.stok,
                 harga: product.harga,
                 jenisProdukId: product.jenisProdukId,
-                gambar: product.gambar
+                gambar: product.gambar,
+                kode: product.kode,
+                hargaBeli: product.hargaBeli,
+                merk: product.merk
             }
         });
         return newProduct;
@@ -78,10 +81,17 @@ const updateProduct = async (productId, productUpdate) => {
         const updatedProduct = await prisma.product.update({
             where: { id: parseInt(productId) },
             data: {
-                ...productUpdate,
+                nama: productUpdate.nama,
+                stok: productUpdate.stok,
+                harga: productUpdate.harga,
+                hargaBeli: productUpdate.hargaBeli,
+                merk: productUpdate.merk,
+                kode: productUpdate.kode,
+                jenisProdukId: productUpdate.jenisProdukId,
                 updatedAt: new Date()
-            }
+              }
         });
+        console.log('Updated product from Prisma:', updatedProduct);
         return updatedProduct;
     } catch (error) {
         throw new Error('internal server error : ' + error.message)

@@ -25,6 +25,7 @@ model Product {
   stok          Int                 @default(0)
   harga         Float
   hargaBeli     Float
+  merk          String
   jenisProduk   Category            @relation(fields: [jenisProdukId], references: [id])
   jenisProdukId Int                 @map("jenis_id")
   createdAt     DateTime            @default(now())

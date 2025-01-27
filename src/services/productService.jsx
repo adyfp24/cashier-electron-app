@@ -42,7 +42,9 @@ const deleteProduct = async (id) => {
 
 const updateProduct = async (id, updatedProduct) => {
     try {
-        const response = await axios.put(`${API_URL}/${id}`, updatedProduct);
+        const response = await axios.put(`${API_URL}/${id}`, updatedProduct, {
+            headers: { 'Content-Type': 'multipart/form-data' }, 
+        });
         return response.data.data;
     } catch (e) {
         throw new Error(e.message)
