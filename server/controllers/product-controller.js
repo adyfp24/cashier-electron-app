@@ -74,7 +74,7 @@ const deleteProduct = async (req, res) => {
             return clientErrorResponse(res, 'data produk tidak bisa dihapus karena sudah tercatat pada transaksi')
         }
         if (deletedProduct) {
-            return successResponse(res,'', "data produk berhasil dihapus")
+            return successResponse(res, '', "data produk berhasil dihapus")
         } else {
             return notFoundResponse(res, "data produk gagal dihapus karena id tidak valid");
         };
@@ -85,6 +85,8 @@ const deleteProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
+        console.log('Data dari req.body:', req.body); // Debugging
+        const image = req.file.filename || '';
         const {
             nama,
             stok,
@@ -102,7 +104,8 @@ const updateProduct = async (req, res) => {
             hargaBeli: parseInt(hargaBeli, 10),
             merk,
             kode,
-            jenisProdukId: parseInt(jenis_produk, 10)
+            jenisProdukId: parseInt(jenis_produk, 10),
+            gambar: '/products/' + image
         }
 
         const productId = req.params.id;

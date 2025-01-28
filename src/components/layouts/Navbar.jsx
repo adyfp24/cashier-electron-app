@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import logoImg from '../../../public/images/logo-sementara.png';
-import { Link } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { SettingContext } from '../../context/settingContext';
 
 function Navbar() {
     const [darkMode, setDarkMode] = useState(false)
+    const { settings, loading: settingsLoading, error: settingsError } = useContext(SettingContext);
 
     useEffect(() => {
         darkMode
@@ -28,15 +28,14 @@ function Navbar() {
                                 </svg>
                             </button>
                             <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-                                <img src={logoImg} class="h-8 me-3" alt="FlowBite Logo" />
-                                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Auto Center Parts</span>
+                                <img src={settings.logoAplikasi} class="h-8 me-3" alt="FlowBite Logo" />
+                                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">{settings.namaAplikasi}</span>
                             </a>
                         </div>
                         <div class="flex items-center">
                             <div class="flex items-center ms-3">
                                 <div className='flex items-center'>
                                     <div className="mr-3 text-center text-black dark:text-white">
-
                                         <div className="flex items-center justify-center">
                                             <p className='font-medium text-gray-700'>Version 1.0.0</p>
                                         </div>

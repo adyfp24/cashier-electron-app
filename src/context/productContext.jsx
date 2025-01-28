@@ -82,7 +82,11 @@ export const ProductProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        getAllProduct();
+        if (location.pathname === '/payment') {
+            getAllProduct(); 
+        } else {
+            getAllProduct(1);
+        }
     }, [location.pathname]);
 
     return (

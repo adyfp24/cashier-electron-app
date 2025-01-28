@@ -1,25 +1,32 @@
 import React, { useState } from 'react';
 
-function ModalAppname({ isOpen, onClose }) {
+function ModalAppname({ isOpen, onClose, onSubmit }) {
     const [appName, setAppName] = useState('');
 
     if (!isOpen) return null;
 
-    const handleSave = () => {
+    const handleSave = (e) => {
+        e.preventDefault();
         console.log('Nama Aplikasi disimpan:', appName);
-        onClose(); 
+        const formData = new FormData();
+        formData.append('nama', appName);
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+        onSubmit(formData);
+        onClose();
     };
 
     const handleCancel = () => {
-        setAppName(''); 
-        onClose(); 
+        setAppName('');
+        onClose();
     };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-80">
             <div className="p-6 bg-white rounded-lg w-96">
                 <h2 className="mb-4 text-xl font-semibold">Edit Nama Aplikasi</h2>
-                
+
                 <div className="mb-4">
                     <label htmlFor="appName" className="block text-sm font-medium text-gray-700">Nama Aplikasi</label>
                     <input

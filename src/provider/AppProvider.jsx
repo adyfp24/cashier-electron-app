@@ -4,6 +4,7 @@ import { PaymentProvider } from "../context/paymentContext";
 import { TransactionProvider } from "../context/transactionContext";
 import { AuthProvider } from "../context/authContext";
 import { DashboardProvider } from "../context/dashboardContext";
+import { SettingProvider } from "../context/settingContext";
 
 
 export const AppProviders = ({ children }) => {
@@ -13,7 +14,9 @@ export const AppProviders = ({ children }) => {
                 <TransactionProvider>
                     <PaymentProvider>
                         <ProductProvider>
-                            {children}
+                            <SettingProvider>
+                                {children}
+                            </SettingProvider>
                         </ProductProvider>
                     </PaymentProvider>
                 </TransactionProvider>

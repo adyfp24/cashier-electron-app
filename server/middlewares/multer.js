@@ -2,8 +2,15 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/products');
+        if (file.fieldname === 'logo') {
+            cb(null, 'public/images'); 
+        } else if (file.fieldname === 'gambar') {
+            cb(null, 'public/products');
+        } else {
+            cb(new Error('Field yang tidak dikenal'), false); 
+        }
     },
+    
     filename: function (req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname);
     },
