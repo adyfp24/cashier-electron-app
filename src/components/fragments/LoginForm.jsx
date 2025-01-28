@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 
-function LoginForm({ onLogin, error }) {
+function LoginForm({ onLogin, error, settings }) {
     const [formData, setFormData] = useState({
         username: '',
         password: ''
@@ -26,9 +25,9 @@ function LoginForm({ onLogin, error }) {
             <div className="w-1/2 bg-gray-50 dark:bg-gray-900">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                     <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                        <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
+                        <img className="w-8 h-8 mr-2" src={settings.logoAplikasi}
                             alt="logo" />
-                        Auto Center Parts
+                        {settings.namaAplikasi}
                     </a>
                     <div
                         className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -54,7 +53,7 @@ function LoginForm({ onLogin, error }) {
                                 </div>
                                 <div>
                                     <label for="password"
-                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                        className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                                     <input onChange={handleChange}
                                         value={formData.password}
                                         type="password"
@@ -65,21 +64,12 @@ function LoginForm({ onLogin, error }) {
                                         required />
                                     {error && error.toLowerCase().includes('password') && <p className="text-sm text-red-500">{error}</p>}
                                 </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-start">
-                                        <div className="flex items-center h-5">
-                                            <input id="remember" aria-describedby="remember" type="checkbox"
-                                                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                                                required="" />
-                                        </div>
-                                        <div className="ml-3 text-sm">
-                                            <label for="remember" className="text-gray-500 dark:text-gray-300">Ingat Saya</label>
-                                        </div>
-                                    </div>
+                                <div>
+                                    <button type="submit"
+                                        className="w-full mt-4 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign
+                                        in</button>
                                 </div>
-                                <button type="submit"
-                                    className="w-full mt-4 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign
-                                    in</button>
+
                             </form>
                         </div>
                     </div>

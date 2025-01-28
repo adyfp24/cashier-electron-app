@@ -1,14 +1,38 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import ModalAppname from '../components/fragments/ModalAppname';
 import ModalBluetooth from '../components/fragments/ModalBluetooth';
 import ModalLogo from '../components/fragments/ModalLogo';
+import { SettingContext } from '../context/settingContext';
 
 function Setting() {
     const [isModalAppNameOpen, setIsModalAppNameOpen] = useState(false);
     const [isModalLogoOpen, setIsModalLogoOpen] = useState(false);
     const [isModalBluetoothOpen, setIsModalBluetoothOpen] = useState(false);
+    const { settings, loading, error, getAllSetting, updateSettingName, updateSettingLogo } = useContext(SettingContext);
+
+    const saveAppName = async (newData) => {
+        console.log(newData);
+        if (newData instanceof FormData) {
+            for (let [key, value] of newData.entries()) {
+                console.log(`Data diterima di saveAppName - ${key}: ${value}`);
+            }
+        }
+        await updateSettingName(newData);
+        setIsModalAppNameOpen(false);
+    }
+
+    const saveAppLogo = async (newData) => {
+        console.log(newData);
+        if (newData instanceof FormData) {
+            for (let [key, value] of newData.entries()) {
+                console.log(`Data diterima di saveAppName - ${key}: ${value}`);
+            }
+        }
+        await updateSettingLogo(newData);
+        setIsModalLogoOpen(false);
+    }
 
     return (
         <>
@@ -46,10 +70,12 @@ function Setting() {
             <ModalAppname
                 isOpen={isModalAppNameOpen}
                 onClose={() => setIsModalAppNameOpen(false)}
+                onSubmit={saveAppName}
             />
             <ModalLogo
                 isOpen={isModalLogoOpen}
                 onClose={() => setIsModalLogoOpen(false)}
+                onSubmit={saveAppLogo}
             />
             <ModalBluetooth
                 isOpen={isModalBluetoothOpen}

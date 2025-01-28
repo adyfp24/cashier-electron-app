@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 
-function ModalLogo({ isOpen, onClose }) {
+function ModalLogo({ isOpen, onClose, onSubmit }) {
     const [logo, setLogo] = useState(null);
 
     if (!isOpen) return null;
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
+        const file = e.target.files[0];  
         if (file) {
-            setLogo(URL.createObjectURL(file));
+            setLogo(file); 
         }
     };
 
     const handleSave = () => {
         console.log('Logo baru disimpan:', logo);
+        const formData = new FormData();    
+        formData.append('logo', logo);
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+        onSubmit(formData);
         onClose(); 
     };
 
