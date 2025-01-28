@@ -10,6 +10,6 @@ router.get('/product', pagination, productController.getAllProduct);
 router.get('/product/:id', productController.getProductById);
 router.post('/product', multer.single('gambar'), productController.createProduct);
 router.delete('/product/:id', productController.deleteProduct);
-router.put('/product/:id', productController.updateProduct);
+router.put('/product/:id', multer.single('gambar'), productController.updateProduct);
 
 module.exports = router;

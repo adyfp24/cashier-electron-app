@@ -87,6 +87,7 @@ const deleteProduct = async (productId) => {
 
 const updateProduct = async (productId, productUpdate) => {
     try {
+        console.log('Data dari req.body:', productUpdate); // Debugging                 
         const updatedProduct = await prisma.product.update({
             where: { id: parseInt(productId) },
             data: {
@@ -96,6 +97,7 @@ const updateProduct = async (productId, productUpdate) => {
                 hargaBeli: productUpdate.hargaBeli,
                 merk: productUpdate.merk,
                 kode: productUpdate.kode,
+                gambar: productUpdate.gambar,                       
                 jenisProdukId: productUpdate.jenisProdukId,
                 updatedAt: new Date()
             }

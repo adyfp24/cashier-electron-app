@@ -53,6 +53,7 @@ const deleteProduct = async (id) => {
 
 const updateProduct = async (id, updatedProduct) => {
     try {
+        console.log('Data yang dikirim ke API (debug):', Array.from(updatedProduct.entries()));
         const response = await axios.put(`${API_URL}/${id}`, updatedProduct, {
             headers: { 'Content-Type': 'multipart/form-data' }, 
         });
