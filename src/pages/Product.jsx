@@ -4,15 +4,26 @@ import { ProductContext } from '../context/productContext'
 import Navbar from '../components/layouts/Navbar';
 import Sidebar from '../components/layouts/Sidebar';
 import ProductModal from '../components/fragments/ModalProduct';
+import Pagination from '../components/fragments/Pagination';
+import CategoryModal from '../components/fragments/ModalCategory';
+import CommonToast from '../components/elements/CommonToast';
 
 function Product() {
-    const { products, error, loading, addProduct,
-        deleteProduct, updateProduct } = useContext(ProductContext);
+    const { products, error, loading, addProduct, addCategory,
+        deleteProduct, updateProduct, pagination, getAllProduct } = useContext(ProductContext);
     const [dropdownOpen, setDropdownOpen] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
 
     const [isModalOpen, setModalOpen] = useState(false)
+    const [isModalCategoryOpen, setModalCategoryOpen] = useState(false)
+
+    const [isCommonToastOpen, setIsCommonToastOpen] = useState(false)
+    const [toastMessage, setToastMessage] = useState({
+        type: 'success',
+        message: ''
+    });
+
     const [selectedProduct, setSelectedProduct] = useState(null)
     const navigate = useNavigate()
 
@@ -21,15 +32,51 @@ function Product() {
         setModalOpen(true)
     }
 
+    const handleAddCategory = () => {
+        setModalCategoryOpen(true)
+    }
+
+    const handleSubmitCategory = async (data) => {
+        try {
+            await addCategory(data)
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
     const handleEditProduct = (product) => {
+        console.log("Editing product: ", product);
         setSelectedProduct(product)
         setModalOpen(true)
     }
 
+    const handleDeleteProduct = async (productId) => {
+        try{
+            await deleteProduct(productId);
+            if (error) {
+                setIsCommonToastOpen(true);
+                setToastMessage({
+                    type: 'error',
+                    message: 'Produk tidak dapat dihapus karena sudah tercatat pada transaksi',
+                });
+            } else {
+                setIsCommonToastOpen(true);
+                setToastMessage({
+                    type: 'success',
+                    message: 'Produk berhasil dihapus',
+                });
+            }
+        }catch(error){
+            console.log(error)
+        }
+
+    };
+
     const handleSubmit = async (data) => {
         try {
             if (selectedProduct) {
-                await updateProduct(data)
+                await updateProduct(selectedProduct.id, data)
+                navigate('/product')
             } else {
                 await addProduct(data)
                 console.log(data)
@@ -51,6 +98,10 @@ function Product() {
 
     };
 
+    const setPage = (page) => {
+        getAllProduct(page)
+    }
+
     useEffect(() => {
         if (searchQuery === '') {
             setFilteredProducts(products);
@@ -68,18 +119,23 @@ function Product() {
         setSearchQuery(e.target.value);
     };
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
-    if (error) {
-        return <p>Error: {error.message || error}</p>; 
-    }
+    // if (loading) {
+    //     return <p>Loading...</p>;
+    // }
 
     return (
         <>
             <Navbar />
+
             <Sidebar />
+
+            <CommonToast
+                isOpen={isCommonToastOpen}
+                onClose={() => setIsCommonToastOpen(false)}
+                message={toastMessage.message}
+                type={toastMessage.type}
+            ></CommonToast>
+
             <section class="bg-gray-50 dark:bg-gray-900 h-full p-3 sm:p-5 md:ml-64 pt-20">
                 <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
 
@@ -99,11 +155,18 @@ function Product() {
                                 </form>
                             </div>
                             <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+                                <button onClick={handleAddCategory} type="button" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    <svg class="h-3.5 w-3.5 mr-2 text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                    </svg>
+                                    Tambah Kategori
+                                </button>
+
                                 <button onClick={handleAddProduct} type="button" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                     <svg class="h-3.5 w-3.5 mr-2 text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                         <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                                     </svg>
-                                    Add product
+                                    Tambah Produk
                                 </button>
 
                                 <div class="flex items-center space-x-3 w-full md:w-auto">
@@ -149,10 +212,12 @@ function Product() {
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" class="px-4 py-3">Nama Produk</th>
+                                        <th scope="col" class="px-4 py-3">Kode</th>
                                         <th scope="col" class="px-4 py-3">Kategori</th>
                                         <th scope="col" class="px-4 py-3">Merk</th>
                                         <th scope="col" class="px-4 py-3">Stok</th>
-                                        <th scope="col" class="px-4 py-3">Harga</th>
+                                        <th scope="col" class="px-4 py-3">Harga Jual</th>
+                                        <th scope="col" class="px-4 py-3">Harga Beli</th>
                                         <th scope="col" class="px-4 py-3">
                                             <span class="sr-only">Actions</span>
                                         </th>
@@ -164,10 +229,12 @@ function Product() {
                                             <td scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {product.nama}
                                             </td>
+                                            <td className="px-4 py-3">{product.kode}</td>
                                             <td className="px-4 py-3">{product.jenisProduk ? product.jenisProduk.name : "null"}</td>
-                                            <td className="px-4 py-3">Yamaha</td>
+                                            <td className="px-4 py-3">{product.merk}</td>
                                             <td className="px-4 py-3">{product.stok}</td>
                                             <td className="px-4 py-3">{product.harga}</td>
+                                            <td className="px-4 py-3">{product.hargaBeli}</td>
                                             <td className="px-4 py-3">
                                                 <div className="relative flex justify-end">
                                                     <button
@@ -184,13 +251,10 @@ function Product() {
                                                     {dropdownOpen === product.id && (
                                                         <div className="absolute right-0 z-50 mt-1 bg-white divide-y divide-gray-100 rounded shadow w-28 top-full dark:bg-gray-700 dark:divide-gray-600">
                                                             <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
-                                                                <li onClick={() => { }} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                                    Show
-                                                                </li>
-                                                                <li onClick={handleEditProduct} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                <li onClick={() => handleEditProduct(product)} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Edit
                                                                 </li>
-                                                                <li onClick={handleEditProduct} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                <li onClick={() => handleDeleteProduct(product.id)} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Hapus
                                                                 </li>
                                                             </ul>
@@ -203,47 +267,7 @@ function Product() {
                                 </tbody>
                             </table>
                         </div>
-                        <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                Showing
-                                <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
-                                of
-                                <span class="font-semibold text-gray-900 dark:text-white">1000</span>
-                            </span>
-                            <ul class="inline-flex items-stretch -space-x-px">
-                                <li>
-                                    <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                        <span class="sr-only">Previous</span>
-                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                        </svg>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                                </li>
-                                <li>
-                                    <a href="#" aria-current="page" class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                        <span class="sr-only">Next</span>
-                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <Pagination limit={pagination.limit} totalPage={pagination.totalPage} page={pagination.page} setPage={setPage}></Pagination>
                     </div>
                 </div>
             </section>
@@ -257,6 +281,14 @@ function Product() {
                 productData={selectedProduct}
                 onSubmit={handleSubmit}
             ></ProductModal>
+
+            <CategoryModal
+                isOpen={isModalCategoryOpen}
+                onClose={() => {
+                    setModalCategoryOpen(false)
+                }}
+                onSubmit={handleSubmitCategory}
+            ></CategoryModal>
         </>
     )
 }

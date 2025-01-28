@@ -14,9 +14,9 @@ const getAllRecapData = async () => {
                 quantity: true
             }
         });
-        const totalIncome = await prisma.payment.aggregate({
+        const totalIncome = await prisma.transaction.aggregate({
             _sum: {
-                total: true
+                total: true                
             }
         })
 
@@ -24,12 +24,12 @@ const getAllRecapData = async () => {
             totalTransaction: totalTransaction,
             totalProduct: totalProduct._sum.stok,
             totalProductSold: totalProductSold._sum.quantity,
-            totalIncome: totalIncome._sum.total
+            totalIncome: totalIncome._sum.total                                             
         };
     } catch (e) {
         throw new Error(e.message)
     }
-};
+}; 
 
 module.exports = {
     getAllRecapData
