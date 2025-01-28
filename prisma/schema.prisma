@@ -75,3 +75,14 @@ model Payment {
 
   @@map("payments")
 }
+
+model Setting {
+  id           Int      @id @default(autoincrement())
+  namaAplikasi String   @map("nama_aplikasi")
+  logoAplikasi String   @map("logo_aplikasi")
+  value        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("settings")
+}
