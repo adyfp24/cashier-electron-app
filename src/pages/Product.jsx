@@ -6,6 +6,7 @@ import Sidebar from '../components/layouts/Sidebar';
 import ProductModal from '../components/fragments/ModalProduct';
 import Pagination from '../components/fragments/Pagination';
 import CategoryModal from '../components/fragments/ModalCategory';
+import CommonToast from '../components/elements/CommonToast';
 
 function Product() {
     const { products, error, loading, addProduct, addCategory,
@@ -16,6 +17,13 @@ function Product() {
 
     const [isModalOpen, setModalOpen] = useState(false)
     const [isModalCategoryOpen, setModalCategoryOpen] = useState(false)
+
+    const [isCommonToastOpen, setIsCommonToastOpen] = useState(false)
+    const [toastMessage, setToastMessage] = useState({
+        type: 'success',
+        message: ''
+    });
+
     const [selectedProduct, setSelectedProduct] = useState(null)
     const navigate = useNavigate()
 
@@ -41,6 +49,28 @@ function Product() {
         setSelectedProduct(product)
         setModalOpen(true)
     }
+
+    const handleDeleteProduct = async (productId) => {
+        try{
+            await deleteProduct(productId);
+            if (error) {
+                setIsCommonToastOpen(true);
+                setToastMessage({
+                    type: 'error',
+                    message: 'Produk tidak dapat dihapus karena sudah tercatat pada transaksi',
+                });
+            } else {
+                setIsCommonToastOpen(true);
+                setToastMessage({
+                    type: 'success',
+                    message: 'Produk berhasil dihapus',
+                });
+            }
+        }catch(error){
+            console.log(error)
+        }
+
+    };
 
     const handleSubmit = async (data) => {
         try {
@@ -93,14 +123,19 @@ function Product() {
     //     return <p>Loading...</p>;
     // }
 
-    if (error) {
-        return <p>Error: {error.message || error}</p>;
-    }
-
     return (
         <>
             <Navbar />
+
             <Sidebar />
+
+            <CommonToast
+                isOpen={isCommonToastOpen}
+                onClose={() => setIsCommonToastOpen(false)}
+                message={toastMessage.message}
+                type={toastMessage.type}
+            ></CommonToast>
+
             <section class="bg-gray-50 dark:bg-gray-900 h-full p-3 sm:p-5 md:ml-64 pt-20">
                 <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
 
@@ -219,7 +254,7 @@ function Product() {
                                                                 <li onClick={() => handleEditProduct(product)} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Edit
                                                                 </li>
-                                                                <li onClick={() => deleteProduct(product.id)} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                                <li onClick={() => handleDeleteProduct(product.id)} className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     Hapus
                                                                 </li>
                                                             </ul>

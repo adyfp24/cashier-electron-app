@@ -68,17 +68,17 @@ const getProductById = async (productId) => {
 const deleteProduct = async (productId) => {
     try {
         const existingOrders = await prisma.detailTransaction.count({
-            where: { productId: productId },
+            where: { productId: parseInt(productId) },
         });
 
         if (existingOrders > 0) {
-            return 'Product cannot be deleted because there are orders related to it.';
+            return 'linked-to-transaction';
         }
 
         const deletedProduct = await prisma.product.delete({
             where: { id: parseInt(productId) }
         });
-        
+
         return deletedProduct;
     } catch (error) {
         throw new Error('internal server error :' + error.message);

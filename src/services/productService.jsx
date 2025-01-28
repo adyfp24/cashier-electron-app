@@ -43,8 +43,10 @@ const addCategory = async (newCategory) => {
 const deleteProduct = async (id) => {
     try {
         const response = await axios.delete(`${API_URL}/${id}`);
-        return response.data.data;
+        console.log(response)
+        return response.data;
     } catch (e) {
+        console.log(e)
         throw new Error(e.message)
     }
 };

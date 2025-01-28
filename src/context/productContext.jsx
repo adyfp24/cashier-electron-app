@@ -61,7 +61,10 @@ export const ProductProvider = ({ children }) => {
         try {
             await productService.deleteProduct(id);
             setProducts(products.filter(product => product.id !== id)); 
+            setError(null);
         } catch (err) {
+            console.log(err);
+            console.log(err.message || '')
             setError(err.message);
         }
         setLoading(false);
