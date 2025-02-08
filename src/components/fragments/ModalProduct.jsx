@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { ProductContext } from '../../context/productContext';
 
 function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
+    const { categories = [] } = useContext(ProductContext);
+
     const [formData, setFormData] = useState({
         nama: '',
         kode: '',
@@ -8,7 +11,7 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
         merk: '',
         harga: 0,
         hargaBeli: 0,
-        jenis_produk: '1',
+        jenis_produk: '',
         gambar: null
     });
 
@@ -100,14 +103,20 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
                                     <label htmlFor="hargaBeli" className="block mb-2 text-sm font-medium text-gray-900">Harga Beli</label>
                                     <input type="number" name="hargaBeli" id="hargaBeli" value={formData.hargaBeli} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan harga beli" required />
                                 </div>
-                                <div>
-                                    <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900">Kategori Produk</label>
-                                    <select id="jenis_produk" name="jenis_produk" value={formData.jenis_produk} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
-                                        <option value="1">Oli</option>
-                                        <option value="2">Mesin</option>
-                                        <option value="3">Velg</option>
-                                    </select>
-                                </div>
+                                <select 
+                                    id="jenis_produk" 
+                                    name="jenis_produk" 
+                                    value={formData.jenis_produk} 
+                                    onChange={handleChange} 
+                                    className="relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 z-50"
+                                >
+                                    <option value="">Kategori Produk</option>
+                                    {categories.map((category) => (
+                                        <option key={category.id} value={category.id}>
+                                            {category.name || category.nama}
+                                        </option>
+                                    ))}
+                                </select>
                                 <div className="sm:col-span-2">
                                     <label htmlFor="gambar" className="block mb-2 text-sm font-medium text-gray-900">
                                         Gambar Produk

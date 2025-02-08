@@ -31,6 +31,15 @@ const addProduct = async (newProduct) => {
     }
 };
 
+const getCategories = async () => {
+    try {
+        const response = await axios.get('/api/category');
+        return response.data.data;
+    } catch (e) {
+        throw new Error(e.response?.data?.message || "Gagal mengambil kategori");
+    }
+}
+
 const addCategory = async (newCategory) => {
     try {
         const response = await axios.post('/api/category', newCategory);
@@ -67,6 +76,7 @@ export default {
     getAll,
     getById,
     addProduct,
+    getCategories,
     addCategory,
     deleteProduct,
     updateProduct

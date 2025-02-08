@@ -7,6 +7,7 @@ export const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [product, setProduct] = useState({});
+    const [categories, setCategories] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({});
@@ -42,6 +43,17 @@ export const ProductProvider = ({ children }) => {
             setProducts([...products, addedProduct]);
         } catch (err) {
             setError(err);
+        }
+        setLoading(false);
+    };
+    
+    const getAllCategories = async () => {
+        setLoading(true);
+        try {
+            const allCategories = await productService.getCategories();
+            setCategories(allCategories);
+        } catch (err) {
+            setError(err.message); 
         }
         setLoading(false);
     };
@@ -87,6 +99,7 @@ export const ProductProvider = ({ children }) => {
         } else {
             getAllProduct(1);
         }
+        getAllCategories();
     }, [location.pathname]);
 
     return (
@@ -94,10 +107,12 @@ export const ProductProvider = ({ children }) => {
             value={{
                 product,
                 products,
+                categories,
                 error,
                 loading,
                 pagination,
                 addProduct,
+                getAllCategories,
                 addCategory,
                 deleteProduct,
                 updateProduct,
