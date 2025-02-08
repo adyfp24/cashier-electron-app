@@ -51,25 +51,20 @@ function Product() {
     }
 
     const handleDeleteProduct = async (productId) => {
-        try{
+        try {
             await deleteProduct(productId);
-            if (error) {
-                setIsCommonToastOpen(true);
-                setToastMessage({
-                    type: 'error',
-                    message: 'Produk tidak dapat dihapus karena sudah tercatat pada transaksi',
-                });
-            } else {
-                setIsCommonToastOpen(true);
-                setToastMessage({
-                    type: 'success',
-                    message: 'Produk berhasil dihapus',
-                });
-            }
-        }catch(error){
-            console.log(error)
+            setIsCommonToastOpen(true);
+            setToastMessage({
+                type: 'success',
+                message: 'Produk berhasil dihapus',
+            });
+        } catch (error) {
+            setIsCommonToastOpen(true);
+            setToastMessage({
+                type: 'error',
+                message: error.response?.data?.message || 'Produk tidak dapat dihapus karena sudah tercatat pada transaksi',
+            });
         }
-
     };
 
     const handleSubmit = async (data) => {

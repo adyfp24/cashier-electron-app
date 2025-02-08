@@ -74,12 +74,13 @@ export const ProductProvider = ({ children }) => {
             await productService.deleteProduct(id);
             setProducts(products.filter(product => product.id !== id)); 
             setError(null);
+            return true; 
         } catch (err) {
-            console.log(err);
-            console.log(err.message || '')
-            setError(err.message);
+            setError(err.message || '');
+            throw err;
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const updateProduct = async (id, updatedData) => {
