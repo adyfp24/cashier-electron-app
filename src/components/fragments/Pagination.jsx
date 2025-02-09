@@ -16,7 +16,7 @@ function Pagination({
 
   return (
     <>
-      <nav className="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0" aria-label="Table navigation">
+      <nav className="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0 py-10" aria-label="Table navigation">
         <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
           Showing
           <span className="font-semibold text-gray-900 dark:text-white"> {(page - 1) * limit + 1} - {Math.min(page * limit, totalPage * limit)} </span>
