@@ -7,6 +7,7 @@ export const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [product, setProduct] = useState({});
+    const [categories, setCategories] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({});
@@ -45,6 +46,17 @@ export const ProductProvider = ({ children }) => {
         }
         setLoading(false);
     };
+    
+    const getAllCategories = async () => {
+        setLoading(true);
+        try {
+            const allCategories = await productService.getCategories();
+            setCategories(allCategories);
+        } catch (err) {
+            setError(err.message); 
+        }
+        setLoading(false);
+    };
 
     const addCategory = async (newData) => {
         setLoading(true);
@@ -62,12 +74,13 @@ export const ProductProvider = ({ children }) => {
             await productService.deleteProduct(id);
             setProducts(products.filter(product => product.id !== id)); 
             setError(null);
+            return true; 
         } catch (err) {
-            console.log(err);
-            console.log(err.message || '')
-            setError(err.message);
+            setError(err.message || '');
+            throw err;
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const updateProduct = async (id, updatedData) => {
@@ -87,6 +100,7 @@ export const ProductProvider = ({ children }) => {
         } else {
             getAllProduct(1);
         }
+        getAllCategories();
     }, [location.pathname]);
 
     return (
@@ -94,10 +108,12 @@ export const ProductProvider = ({ children }) => {
             value={{
                 product,
                 products,
+                categories,
                 error,
                 loading,
                 pagination,
                 addProduct,
+                getAllCategories,
                 addCategory,
                 deleteProduct,
                 updateProduct,

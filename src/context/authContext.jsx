@@ -6,10 +6,31 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
 
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const userData = await authService.verifyToken(token);
+                    setUser(userData);
+                    setIsAuthenticated(true);
+                } catch (error) {
+                    localStorage.removeItem('token');
+                    setUser(null);
+                    setIsAuthenticated(false);
+                    setError('Session expired. Please login again.');
+                }
+            }
+            setLoading(false);
+        };
+
+        checkAuth();
+    }, []);
 
     const login = async (data) => {
         setLoading(true);
