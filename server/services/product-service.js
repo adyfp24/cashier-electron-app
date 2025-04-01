@@ -1,113 +1,97 @@
-const { PrismaClient } = require('@prisma/client');
-const { data } = require('autoprefixer');
-const prisma = new PrismaClient();
+const db = require('../utils/db-conn');
 
 const createProduct = async (product) => {
-    try {
-        const newProduct = await prisma.product.create({
-            data: {
-                nama: product.nama,
-                stok: product.stok,
-                harga: product.harga,
-                jenisProdukId: product.jenisProdukId,
-                gambar: product.gambar,
-                kode: product.kode,
-                hargaBeli: product.hargaBeli,
-                merk: product.merk
+    return new Promise((resolve, reject) => {
+        const query = `INSERT INTO products (nama, stok, harga, jenis_id, gambar, kode, hargaBeli, merk, createdAt, updatedAt)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`;
+        db.run(query, [
+            product.nama, product.stok, product.harga, product.jenisProdukId,
+            product.gambar, product.kode, product.hargaBeli, product.merk
+        ], function (err) {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
             }
+            resolve({ id: this.lastID, ...product });
         });
-        return newProduct;
-    } catch (error) {
-        throw new Error('internal server error :' + error.message);
-    }
-}
+    });
+};
 
 const getAllProduct = async (page, limit) => {
-    try {
+    return new Promise((resolve, reject) => {
         const offset = (page - 1) * limit;
-        const allProducts = await prisma.product.findMany(
-            {
-                skip: offset,
-                take: limit,
-                include: {
-                    jenisProduk: true,
-                }
+        const query = `SELECT p.*, c.name AS jenisProduk FROM products p
+                       JOIN categories c ON p.jenis_id = c.id
+                       LIMIT ? OFFSET ?`;
+        db.all(query, [limit, offset], (err, rows) => {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
             }
-        );
-        const totalProducts = await prisma.product.count();
-        const totalPage = Math.ceil(totalProducts / limit);
-
-        return {
-            products: allProducts,
-            pagination: {
-                page,
-                limit,
-                total: totalProducts,
-                totalPage,
-            },
-        };
-    } catch (error) {
-        throw new Error('internal server error :' + error.message);
-    }
-}
+            db.get('SELECT COUNT(*) AS total FROM products', [], (err, countRow) => {
+                if (err) {
+                    return reject(new Error('Internal server error: ' + err.message));
+                }
+                resolve({
+                    products: rows,
+                    pagination: {
+                        page,
+                        limit,
+                        total: countRow.total,
+                        totalPage: Math.ceil(countRow.total / limit)
+                    }
+                });
+            });
+        });
+    });
+};
 
 const getProductById = async (productId) => {
-    try {
-        const product = await prisma.product.findUnique({
-            where: { id: parseInt(productId) },
-            include: {
-                jenisProduk: true
+    return new Promise((resolve, reject) => {
+        const query = `SELECT p.*, c.name AS jenisProduk FROM products p
+                       JOIN categories c ON p.jenis_id = c.id WHERE p.id = ?`;
+        db.get(query, [productId], (err, row) => {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
             }
+            resolve(row);
         });
-        return product;
-    } catch (error) {
-        throw new Error('internal server error :' + error.message);
-    }
-}
+    });
+};
 
 const deleteProduct = async (productId) => {
-    try {
-        const existingOrders = await prisma.detailTransaction.count({
-            where: { productId: parseInt(productId) },
+    return new Promise((resolve, reject) => {
+        db.get('SELECT COUNT(*) AS count FROM detail_transactions WHERE product_id = ?', [productId], (err, row) => {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
+            }
+            if (row.count > 0) {
+                return resolve('linked-to-transaction');
+            }
+            db.run('DELETE FROM products WHERE id = ?', [productId], function (err) {
+                if (err) {
+                    return reject(new Error('Internal server error: ' + err.message));
+                }
+                resolve({ message: 'Product deleted', id: productId });
+            });
         });
-
-        if (existingOrders > 0) {
-            return 'linked-to-transaction';
-        }
-
-        const deletedProduct = await prisma.product.delete({
-            where: { id: parseInt(productId) }
-        });
-
-        return deletedProduct;
-    } catch (error) {
-        throw new Error('internal server error :' + error.message);
-    }
-}
+    });
+};
 
 const updateProduct = async (productId, productUpdate) => {
-    try {
-        console.log('Data dari req.body:', productUpdate); // Debugging                 
-        const updatedProduct = await prisma.product.update({
-            where: { id: parseInt(productId) },
-            data: {
-                nama: productUpdate.nama,
-                stok: productUpdate.stok,
-                harga: productUpdate.harga,
-                hargaBeli: productUpdate.hargaBeli,
-                merk: productUpdate.merk,
-                kode: productUpdate.kode,
-                gambar: productUpdate.gambar,                       
-                jenisProdukId: productUpdate.jenisProdukId,
-                updatedAt: new Date()
+    return new Promise((resolve, reject) => {
+        const query = `UPDATE products SET nama = ?, stok = ?, harga = ?, hargaBeli = ?, merk = ?, kode = ?, gambar = ?, jenis_id = ?, updatedAt = datetime('now')
+                       WHERE id = ?`;
+        db.run(query, [
+            productUpdate.nama, productUpdate.stok, productUpdate.harga,
+            productUpdate.hargaBeli, productUpdate.merk, productUpdate.kode,
+            productUpdate.gambar, productUpdate.jenisProdukId, productId
+        ], function (err) {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
             }
+            resolve({ id: productId, ...productUpdate });
         });
-        console.log('Updated product from Prisma:', updatedProduct);
-        return updatedProduct;
-    } catch (error) {
-        throw new Error('internal server error : ' + error.message)
-    }
-}
+    });
+};
 
 module.exports = {
     createProduct,
@@ -115,4 +99,4 @@ module.exports = {
     getProductById,
     deleteProduct,
     updateProduct
-}
+};

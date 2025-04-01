@@ -123,15 +123,16 @@ function Product() {
         if (searchQuery) {
             filtered = filtered.filter(product =>
                 product.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.jenisProduk?.name.toLowerCase().includes(searchQuery.toLowerCase())
+                product.jenisProduk.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
         if (selectedCategories.length > 0) {
-            filtered = filtered.filter(product => selectedCategories.includes(product.jenisProduk?.name));
+            filtered = filtered.filter(product => selectedCategories.includes(product.jenisProduk));
         }
 
         setFilteredProducts(filtered);
+        console.log('Filtered Products:', filtered);
     }, [searchQuery, selectedCategories, products]);
     
 
@@ -255,7 +256,7 @@ function Product() {
                                                 {product.nama}
                                             </td>
                                             <td className="px-4 py-3">{product.kode}</td>
-                                            <td className="px-4 py-3">{product.jenisProduk ? product.jenisProduk.name : "null"}</td>
+                                            <td className="px-4 py-3">{product.jenisProduk}</td>
                                             <td className="px-4 py-3">{product.merk}</td>
                                             <td className="px-4 py-3">{product.stok}</td>
                                             <td className="px-4 py-3">{product.harga}</td>
