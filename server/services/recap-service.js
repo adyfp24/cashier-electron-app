@@ -1,36 +1,32 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const db = require('../utils/db-conn');
 
-const getAllRecapData = async () => {
-    try {
-        const totalTransaction = await prisma.transaction.count();
-        const totalProduct = await prisma.product.aggregate({
-            _sum: {
-                stok: true
-            }
-        });
-        const totalProductSold = await prisma.detailTransaction.aggregate({
-            _sum: {
-                quantity: true
-            }
-        });
-        const totalIncome = await prisma.transaction.aggregate({
-            _sum: {
-                total: true                
-            }
-        })
+const getAllRecapData = () => {
+    return new Promise((resolve, reject) => {
+        const recapData = {};
 
-        return {
-            totalTransaction: totalTransaction,
-            totalProduct: totalProduct._sum.stok,
-            totalProductSold: totalProductSold._sum.quantity,
-            totalIncome: totalIncome._sum.total                                             
-        };
-    } catch (e) {
-        throw new Error(e.message)
-    }
-}; 
+        db.get('SELECT COUNT(id) AS totalTransaction FROM transactions', [], (err, row) => {
+            if (err) return reject(err);
+            recapData.totalTransaction = row.totalTransaction;
+        });
+
+        db.get('SELECT SUM(stok) AS totalProduct FROM products', [], (err, row) => {
+            if (err) return reject(err);
+            recapData.totalProduct = row.totalProduct || 0;
+        });
+
+        db.get('SELECT SUM(quantity) AS totalProductSold FROM detail_transactions', [], (err, row) => {
+            if (err) return reject(err);
+            recapData.totalProductSold = row.totalProductSold || 0;
+        });
+
+        db.get('SELECT SUM(total) AS totalIncome FROM transactions', [], (err, row) => {
+            if (err) return reject(err);
+            recapData.totalIncome = row.totalIncome || 0;
+            resolve(recapData);
+        });
+    });
+};
 
 module.exports = {
     getAllRecapData
-}
+};
