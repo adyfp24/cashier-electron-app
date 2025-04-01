@@ -1,88 +1,219 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const { format } = require('date-fns');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+const db = require('../utils/db-conn');
 
 const createOrder = async (products) => {
-    try {
-        const newTransaction = await prisma.$transaction(async (prisma) => {
-            const transaction = await createTransaction(prisma);
-            let total = 0;
+    return new Promise((resolve, reject) => {
+        // Use transaction to ensure data integrity
+        db.serialize(() => {
+            db.run('BEGIN TRANSACTION');
 
-            for (const item of products) {
-                const product = await getProductById(prisma, item.productId);
-                if (!product || product.stok < item.quantity) {
-                    throw new Error(`Product with id ${item.productId} is out of stock or not available`);
-                }
-                const subtotal = await processProduct(prisma, transaction.id, product, item.quantity);
-                await updateProductStock(prisma, product.id, product.stok - item.quantity);
-                total += subtotal;
-            }
-
-            await updateTransactionTotal(prisma, transaction.id, total);
-            return transaction;
+            // Create transaction first
+            createTransaction()
+                .then(transaction => {
+                    let total = 0;
+                    let processedItems = 0;
+                    
+                    // Process each product
+                    products.forEach(item => {
+                        getProductById(item.productId)
+                            .then(product => {
+                                if (!product || product.stok < item.quantity) {
+                                    db.run('ROLLBACK');
+                                    reject(new Error(`Product with id ${item.productId} is out of stock or not available`));
+                                    return;
+                                }
+                                
+                                // Process the product
+                                processProduct(transaction.id, product, item.quantity)
+                                    .then(subtotal => {
+                                        // Update product stock
+                                        updateProductStock(product.id, product.stok - item.quantity)
+                                            .then(() => {
+                                                total += subtotal;
+                                                processedItems++;
+                                                
+                                                // If all items processed, update transaction total
+                                                if (processedItems === products.length) {
+                                                    updateTransactionTotal(transaction.id, total)
+                                                        .then(() => {
+                                                            // Get complete transaction details
+                                                            getTransactionDetails(transaction.id)
+                                                                .then(transactionWithDetails => {
+                                                                    db.run('COMMIT');
+                                                                    resolve(formatTransactionResponse(transactionWithDetails));
+                                                                })
+                                                                .catch(error => {
+                                                                    db.run('ROLLBACK');
+                                                                    reject(new Error('Error getting transaction details: ' + error.message));
+                                                                });
+                                                        })
+                                                        .catch(error => {
+                                                            db.run('ROLLBACK');
+                                                            reject(new Error('Error updating transaction total: ' + error.message));
+                                                        });
+                                                }
+                                            })
+                                            .catch(error => {
+                                                db.run('ROLLBACK');
+                                                reject(new Error('Error updating product stock: ' + error.message));
+                                            });
+                                    })
+                                    .catch(error => {
+                                        db.run('ROLLBACK');
+                                        reject(new Error('Error processing product: ' + error.message));
+                                    });
+                            })
+                            .catch(error => {
+                                db.run('ROLLBACK');
+                                reject(new Error('Error getting product: ' + error.message));
+                            });
+                    });
+                })
+                .catch(error => {
+                    db.run('ROLLBACK');
+                    reject(new Error('Error creating transaction: ' + error.message));
+                });
         });
-
-        const transactionWithDetails = await getTransactionDetails(prisma, newTransaction.id);
-
-        return formatTransactionResponse(transactionWithDetails);
-    } catch (error) {
-        throw new Error('internal server error :' + error.message);
-    }
-};
-
-const createTransaction = async (prisma) => {
-    return prisma.transaction.create({
-        data: {
-            tanggal: new Date(),
-            total: 0
-        }
+    }).catch(error => {
+        throw new Error('Internal server error: ' + error.message);
     });
 };
 
-const getProductById = async (prisma, productId) => {
-    return prisma.product.findUnique({
-        where: { id: productId },
-    });
-};
-
-const processProduct = async (prisma, transactionId, product, quantity) => {
-    const subtotal = quantity * product.harga;
-    await prisma.detailTransaction.create({
-        data: {
-            transactionId: transactionId,
-            productId: product.id,
-            quantity: quantity,
-            subtotal: subtotal
-        }
-    });
-    return subtotal;
-};
-
-const updateProductStock = async (prisma, productId, newStock) => {
-    await prisma.product.update({
-        where: { id: productId },
-        data: { stok: newStock }
-    });
-};
-
-const updateTransactionTotal = async (prisma, transactionId, total) => {
-    await prisma.transaction.update({
-        where: { id: transactionId },
-        data: { total: total },
-    });
-};
-
-const getTransactionDetails = async (prisma, transactionId) => {
-    return prisma.transaction.findUnique({
-        where: { id: transactionId },
-        include: {
-            details: {
-                include: {
-                    product: true
+const createTransaction = () => {
+    return new Promise((resolve, reject) => {
+        const now = new Date().toISOString();
+        db.run(
+            'INSERT INTO transactions (tanggal, total) VALUES (?, ?)',
+            [now, 0],
+            function(err) {
+                if (err) {
+                    reject(err);
+                    return;
                 }
+                resolve({ id: this.lastID, tanggal: now, total: 0 });
             }
-        }
+        );
+    });
+};
+
+const getProductById = (productId) => {
+    return new Promise((resolve, reject) => {
+        db.get(
+            'SELECT * FROM products WHERE id = ?',
+            [productId],
+            (err, product) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(product);
+            }
+        );
+    });
+};
+
+const processProduct = (transactionId, product, quantity) => {
+    return new Promise((resolve, reject) => {
+        const subtotal = quantity * product.harga;
+        db.run(
+            'INSERT INTO detail_transactions (transaction_id, product_id, quantity, subtotal) VALUES (?, ?, ?, ?)',
+            [transactionId, product.id, quantity, subtotal],
+            function(err) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(subtotal);
+            }
+        );
+    });
+};
+
+const updateProductStock = (productId, newStock) => {
+    return new Promise((resolve, reject) => {
+        db.run(
+            'UPDATE products SET stok = ? WHERE id = ?',
+            [newStock, productId],
+            function(err) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve();
+            }
+        );
+    });
+};
+
+const updateTransactionTotal = (transactionId, total) => {
+    return new Promise((resolve, reject) => {
+        db.run(
+            'UPDATE transactions SET total = ? WHERE id = ?',
+            [total, transactionId],
+            function(err) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve();
+            }
+        );
+    });
+};
+
+const getTransactionDetails = (transactionId) => {
+    return new Promise((resolve, reject) => {
+        // First get the transaction
+        db.get(
+            'SELECT * FROM transactions WHERE id = ?',
+            [transactionId],
+            (err, transaction) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                
+                if (!transaction) {
+                    reject(new Error(`Transaction with id ${transactionId} not found`));
+                    return;
+                }
+
+                // Get all detail transactions with product info
+                db.all(
+                    `SELECT dt.*, p.nama, p.harga 
+                     FROM detail_transactions dt
+                     JOIN products p ON dt.product_id = p.id
+                     WHERE dt.transaction_id = ?`,
+                    [transactionId],
+                    (err, details) => {
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+                        
+                        // Format details to match the expected structure
+                        transaction.details = details.map(detail => ({
+                            id: detail.id,
+                            transactionId: detail.transaction_id,
+                            productId: detail.product_id,
+                            quantity: detail.quantity,
+                            subtotal: detail.subtotal,
+                            product: {
+                                id: detail.product_id,
+                                nama: detail.nama,
+                                harga: detail.harga
+                            }
+                        }));
+                        
+                        resolve(transaction);
+                    }
+                );
+            }
+        );
     });
 };
 
@@ -101,42 +232,222 @@ const formatTransactionResponse = (transaction) => {
     };
 };
 
-const exportStruck = async (transactionId, uangMasuk) => {
-    try {
-        const transaction = await prisma.transaction.findUnique({
-            where: { id: parseInt(transactionId) },
-            include: {
-                details: {
-                    include: {
-                        product: true
-                    }
+// Payment processing function - similar structure to the rest
+const processPayment = (paymentData) => {
+    return new Promise((resolve, reject) => {
+        // Get transaction by ID to verify it exists
+        db.get(
+            'SELECT * FROM transactions WHERE id = ?',
+            [paymentData.id],
+            (err, transaction) => {
+                if (err) {
+                    reject(new Error('Database error: ' + err.message));
+                    return;
                 }
+
+                if (!transaction) {
+                    reject(new Error(`Transaction with id ${paymentData.id} not found`));
+                    return;
+                }
+
+                // Create payment record
+                db.run(
+                    'INSERT INTO payments (total, uang_masuk, kembali, transaction_id) VALUES (?, ?, ?, ?)',
+                    [
+                        paymentData.total,
+                        paymentData.uangMasuk,
+                        paymentData.kembali,
+                        paymentData.id
+                    ],
+                    function(err) {
+                        if (err) {
+                            reject(new Error('Error creating payment: ' + err.message));
+                            return;
+                        }
+                        
+                        // Get complete transaction with payment details
+                        getTransactionWithPayment(paymentData.id)
+                            .then(result => {
+                                resolve(result);
+                            })
+                            .catch(error => {
+                                reject(new Error('Error getting transaction with payment: ' + error.message));
+                            });
+                    }
+                );
             }
-        });
+        );
+    });
+};
 
-        if (!transaction) {
-            throw new Error('Transaction not found');
-        }
-
-        const payment = await prisma.payment.create({
-            data: {
-                total: transaction.total,
-                uangMasuk: parseInt(uangMasuk),
-                kembali: uangMasuk - transaction.total,
-                transactionId: transaction.id
+const getTransactionWithPayment = (transactionId) => {
+    return new Promise((resolve, reject) => {
+        db.get(
+            `SELECT t.*, p.total as payment_total, p.uang_masuk, p.kembali 
+             FROM transactions t
+             JOIN payments p ON t.id = p.transaction_id
+             WHERE t.id = ?`,
+            [transactionId],
+            (err, result) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                
+                if (!result) {
+                    reject(new Error(`Transaction with payment for id ${transactionId} not found`));
+                    return;
+                }
+                
+                resolve({
+                    id: result.id,
+                    tanggal: result.tanggal,
+                    total: result.total,
+                    payment: {
+                        total: result.payment_total,
+                        uangMasuk: result.uang_masuk,
+                        kembali: result.kembali
+                    }
+                });
             }
-        });
+        );
+    });
+};
 
-        const structData = {
-            transaction,
-            payment
-        };
+// const createOrder = async (products) => {
+//     try {
+//         const newTransaction = await prisma.$transaction(async (prisma) => {
+//             const transaction = await createTransaction(prisma);
+//             let total = 0;
 
-        const pdfBytes = await generateStructPDF(structData);
-        return pdfBytes;
-    } catch (error) {
-        throw new Error(error.message);
-    }
+//             for (const item of products) {
+//                 const product = await getProductById(prisma, item.productId);
+//                 if (!product || product.stok < item.quantity) {
+//                     throw new Error(`Product with id ${item.productId} is out of stock or not available`);
+//                 }
+//                 const subtotal = await processProduct(prisma, transaction.id, product, item.quantity);
+//                 await updateProductStock(prisma, product.id, product.stok - item.quantity);
+//                 total += subtotal;
+//             }
+
+//             await updateTransactionTotal(prisma, transaction.id, total);
+//             return transaction;
+//         });
+
+//         const transactionWithDetails = await getTransactionDetails(prisma, newTransaction.id);
+
+//         return formatTransactionResponse(transactionWithDetails);
+//     } catch (error) {
+//         throw new Error('internal server error :' + error.message);
+//     }
+// };
+
+// const createTransaction = async (prisma) => {
+//     return prisma.transaction.create({
+//         data: {
+//             tanggal: new Date(),
+//             total: 0
+//         }
+//     });
+// };
+
+// const getProductById = async (prisma, productId) => {
+//     return prisma.product.findUnique({
+//         where: { id: productId },
+//     });
+// };
+
+// const processProduct = async (prisma, transactionId, product, quantity) => {
+//     const subtotal = quantity * product.harga;
+//     await prisma.detailTransaction.create({
+//         data: {
+//             transactionId: transactionId,
+//             productId: product.id,
+//             quantity: quantity,
+//             subtotal: subtotal
+//         }
+//     });
+//     return subtotal;
+// };
+
+// const updateProductStock = async (prisma, productId, newStock) => {
+//     await prisma.product.update({
+//         where: { id: productId },
+//         data: { stok: newStock }
+//     });
+// };
+
+// const updateTransactionTotal = async (prisma, transactionId, total) => {
+//     await prisma.transaction.update({
+//         where: { id: transactionId },
+//         data: { total: total },
+//     });
+// };
+
+// const getTransactionDetails = async (prisma, transactionId) => {
+//     return prisma.transaction.findUnique({
+//         where: { id: transactionId },
+//         include: {
+//             details: {
+//                 include: {
+//                     product: true
+//                 }
+//             }
+//         }
+//     });
+// };
+
+// const formatTransactionResponse = (transaction) => {
+//     const transactionDetails = transaction.details.map(detail => ({
+//         produk: detail.product.nama,
+//         jumlahProduk: detail.quantity,
+//         harga: detail.product.harga
+//     }));
+
+//     return {
+//         id: transaction.id,
+//         tanggal: transaction.tanggal,
+//         total: transaction.total,
+//         detailTransaksi: transactionDetails
+//     };
+// };
+
+const exportStruck = async (transactionId, uangMasuk) => {
+    // try {
+    //     const transaction = await prisma.transaction.findUnique({
+    //         where: { id: parseInt(transactionId) },
+    //         include: {
+    //             details: {
+    //                 include: {
+    //                     product: true
+    //                 }
+    //             }
+    //         }
+    //     });
+
+    //     if (!transaction) {
+    //         throw new Error('Transaction not found');
+    //     }
+
+    //     const payment = await prisma.payment.create({
+    //         data: {
+    //             total: transaction.total,
+    //             uangMasuk: parseInt(uangMasuk),
+    //             kembali: uangMasuk - transaction.total,
+    //             transactionId: transaction.id
+    //         }
+    //     });
+
+    //     const structData = {
+    //         transaction,
+    //         payment
+    //     };
+
+    //     const pdfBytes = await generateStructPDF(structData);
+    //     return pdfBytes;
+    // } catch (error) {
+    //     throw new Error(error.message);
+    // }
 };
 
 const generateStructPDF = async (structData) => {
