@@ -1,4 +1,5 @@
 const db = require('../utils/db-conn');
+const excelJs = require('exceljs');
 
 const getAllTransaction = (page, limit) => {
     return new Promise((resolve, reject) => {
@@ -99,8 +100,9 @@ const exportTransactionHistory = () => {
                    p.nama as product_name, p.harga as product_price
             FROM transactions t
             LEFT JOIN detail_transactions dt ON t.id = dt.transaction_id
-            LEFT JOIN products p ON dt.product_id = p.id`, [], async (err, rows) => {
-            if (err) reject(new Error('Internal server error: ' + err.message));
+            LEFT JOIN products p ON dt.product_id = p.id
+            ORDER BY t.id`, [], async (err, rows) => {
+            if (err) return reject(new Error('Internal server error: ' + err.message));
 
             const workbook = new excelJs.Workbook();
             const worksheet = workbook.addWorksheet('Transaction History');
@@ -112,13 +114,17 @@ const exportTransactionHistory = () => {
                 { header: 'Detail', key: 'detail', width: 60 },
             ];
 
-            rows.forEach((row, index) => {
+            let previousTransactionId = null;
+
+            rows.forEach((row) => {
                 worksheet.addRow({
-                    id: index === 0 ? row.id : '',
-                    tanggal: index === 0 ? row.tanggal.split('T')[0] : '',
-                    total: index === 0 ? row.total : '',
-                    detail: `Nama: ${row.product_name}, Harga: ${row.product_price} Kuantitas: ${row.quantity}, Subtotal: ${row.subtotal}`,
+                    id: row.id !== previousTransactionId ? row.id : '',
+                    tanggal: row.id !== previousTransactionId ? row.tanggal : '',
+                    total: row.id !== previousTransactionId ? row.total : '',
+                    detail: `Nama: ${row.product_name}, Harga: ${row.product_price}, Kuantitas: ${row.quantity}, Subtotal: ${row.subtotal}`,
                 });
+
+                previousTransactionId = row.id;
             });
 
             worksheet.getRow(1).eachCell((cell) => {
@@ -135,6 +141,7 @@ const exportTransactionHistory = () => {
         });
     });
 };
+
 
 module.exports = {
     getAllTransaction,
