@@ -1,7 +1,5 @@
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const { format } = require('date-fns');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
 const db = require('../utils/db-conn');
 
