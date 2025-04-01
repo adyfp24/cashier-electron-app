@@ -20,7 +20,6 @@ function App() {
             <Route element={<Protected />}>
                 <Route path='/dashboard' element={<LandingPage />}></Route>
                 <Route path='/product' element={<Product />}></Route>
-                <Route path='/product/:id' element={<ProductDetail />}></Route>
                 <Route path='/payment' element={<Payment />}></Route>
                 <Route path='/receipt' element={<Receipt />}></Route>
                 <Route path='/history' element={<TransactionHistory />}></Route>
