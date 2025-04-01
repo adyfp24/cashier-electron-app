@@ -1,53 +1,46 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const db = require('../utils/db-conn');
 
 const updateSettingName = async (updatedData) => {
-    try {
-        const filteredData = Object.fromEntries(
-            Object.entries(updatedData).filter(([_, value]) => value !== undefined)
-        );
-
-        const newSetting = await prisma.setting.update({
-            where: {
-                id: 1,
-            },
-            data: filteredData,
+    return new Promise((resolve, reject) => {
+        const query = `UPDATE settings
+                       SET nama_aplikasi = ?
+                       WHERE id = ?`;
+        db.run(query, [updatedData.appName, 1], function (err) {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
+            }
+            resolve({ id: this.lastID, name: updatedData.name });
         });
-
-        return newSetting;
-    } catch (error) {
-        console.error('Error di service:', error.message);
-        throw new Error('internal server error: ' + error.message);
     }
+    );
 };
 
 const updateSettingLogo = async (updatedData) => {
-    try {
-        const filteredData = Object.fromEntries(
-            Object.entries(updatedData).filter(([_, value]) => value !== undefined)
-        );
-
-        const newSetting = await prisma.setting.update({
-            where: {
-                id: 1,
-            },
-            data: filteredData,
+    return new Promise((resolve, reject) => {
+        const query = `UPDATE settings
+                       SET logo_aplikasi = ?
+                       WHERE id = ?`;
+        db.run(query, [updatedData.appLogo, 1], function (err) {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
+            }
+            resolve({ id: this.lastID, logo: updatedData.logo });
         });
-
-        return newSetting;
-    } catch (error) {
-        console.error('Error di service:', error.message);
-        throw new Error('internal server error: ' + error.message);
     }
+    );
 };
 
 const getAllSetting = async () => {
-    try {
-        const allSetting = await prisma.setting.findMany();
-        return allSetting;
-    } catch (error) {
-        throw new Error('internal server error :' + error.message);
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM settings`;
+        db.all(query, [], (err, rows) => {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
+            }
+            resolve(rows);
+        });
     }
+    );
 }
 
 module.exports = {
