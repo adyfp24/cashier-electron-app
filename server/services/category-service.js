@@ -1,28 +1,29 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const db = require('../utils/db-conn')
 
 const createCategory = async (data) => {
-    try {
-        console.log('Data yang diterima di service:', data); // Debugging
-        const newCategory = await prisma.category.create({
-            data: {
-                name: data, // Pastikan data adalah string
-            },
+    return new Promise((resove, reject) => {
+        const query = `INSERT INTO categories (name)
+                       VALUES (?)`;
+        db.run(query, [data], function (err) {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
+            }
+            resove({ id: this.lastID, name: data });
         });
-        return newCategory;
-    } catch (error) {
-        console.error('Error di service:', error.message);
-        throw new Error('internal server error: ' + error.message);
     }
+    );
 };
 
 const getAllCategory = async () => {
-    try {
-        const allCategory = await prisma.category.findMany();
-        return allCategory;
-    } catch (error) {
-        throw new Error('internal server error :' + error.message);
-    }
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM categories`;
+        db.all(query, [], (err, rows) => {
+            if (err) {
+                return reject(new Error('Internal server error: ' + err.message));
+            }
+            resolve(rows);
+        });
+    });
 }
 
 module.exports = {

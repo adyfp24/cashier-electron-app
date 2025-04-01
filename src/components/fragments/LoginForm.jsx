@@ -25,9 +25,9 @@ function LoginForm({ onLogin, error, settings }) {
             <div className="w-1/2 bg-gray-50 dark:bg-gray-900">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                     <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-                        <img className="w-8 h-8 mr-2" src={settings.logoAplikasi}
+                        <img className="w-8 h-8 mr-2" src={settings.logo_aplikasi}
                             alt="logo" />
-                        {settings.namaAplikasi}
+                        {settings.nama_aplikasi}
                     </a>
                     <div
                         className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -46,7 +46,7 @@ function LoginForm({ onLogin, error, settings }) {
                                         type="text"
                                         name="username"
                                         id="username"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         placeholder="masukkan username"
                                         required />
                                     {error && error.toLowerCase().includes('username') && <p className="text-sm text-red-500">{error}</p>}
@@ -60,7 +60,7 @@ function LoginForm({ onLogin, error, settings }) {
                                         name="password"
                                         id="password"
                                         placeholder="••••••••"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         required />
                                     {error && error.toLowerCase().includes('password') && <p className="text-sm text-red-500">{error}</p>}
                                 </div>

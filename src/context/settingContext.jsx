@@ -25,7 +25,7 @@ export const SettingProvider = ({ children }) => {
     const updateSettingName = async (newData) => {
         setLoading(true);
         try {
-            const updatedSetting = await settingService.updateSettingName(newData);
+            await settingService.updateSettingName(newData);
             getAllSetting();
         } catch (err) {
             setError(err);
@@ -36,7 +36,7 @@ export const SettingProvider = ({ children }) => {
     const updateSettingLogo = async (newData) => {
         setLoading(true);
         try {
-            const updatedSetting = await settingService.updateSettingLogo(newData);
+            await settingService.updateSettingLogo(newData);
             getAllSetting();
         } catch (err) {
             setError(err);

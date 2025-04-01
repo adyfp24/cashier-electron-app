@@ -28,8 +28,8 @@ function Navbar() {
                                 </svg>
                             </button>
                             <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-                                <img src={settings.logoAplikasi} class="h-8 me-3" alt="FlowBite Logo" />
-                                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">{settings.namaAplikasi}</span>
+                                <img src={settings.logo_aplikasi} class="h-8 me-3" alt="FlowBite Logo" />
+                                <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">{settings.nama_aplikasi}</span>
                             </a>
                         </div>
                         <div class="flex items-center">

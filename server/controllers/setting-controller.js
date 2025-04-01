@@ -18,7 +18,7 @@ const updateSettingName = async (req, res) => {
         console.log('Data dari req.body:', req.body); // Debugging
         const { nama } = req.body;
         const data = {
-            namaAplikasi: nama || undefined,
+            appName: nama || undefined,
         };
         console.log('Data yang diteruskan ke service:', data); // Debugging
         const newSetting = await settingService.updateSettingName(data);
@@ -34,7 +34,7 @@ const updateSettingLogo = async (req, res) => {
         console.log('Data dari req.body:', req.body); // Debugging
         const logo = req.file.filename;
         const data = {
-            logoAplikasi: logo ? '/images/' + logo : undefined
+            appLogo: logo ? '/images/' + logo : undefined
         };
         console.log('Data yang diteruskan ke service:', data); // Debugging
         const newSetting = await settingService.updateSettingLogo(data);

@@ -24,7 +24,7 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
                 stok: productData.stok || 0,
                 harga: productData.harga || 0,
                 hargaBeli: productData.hargaBeli || 0,
-                jenis_produk: productData.jenis_produk || '1',
+                jenis_produk: productData.jenisProduk,
                 gambar: null
             });
         }

@@ -19,8 +19,8 @@ function ModalDetailHistory({ isOpen, transaction, onClose }) {
                         {transaction.details.map((detail) => (
                             <li key={detail.id}>
                                 <div className="flex justify-between">
-                                    <span className=''>{detail.product.nama}</span>
-                                    <span className=''>{detail.quantity} x Rp. {detail.product.harga} = Rp. {detail.subtotal}</span>
+                                    <span className=''>{detail.product_name}</span>
+                                    <span className=''>{detail.quantity} x Rp. {detail.product_price} = Rp. {detail.subtotal}</span>
                                 </div>
                             </li>
                         ))}

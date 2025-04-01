@@ -1,36 +1,45 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const db = require('../utils/db-conn');
 
-const getAllRecapData = async () => {
-    try {
-        const totalTransaction = await prisma.transaction.count();
-        const totalProduct = await prisma.product.aggregate({
-            _sum: {
-                stok: true
-            }
-        });
-        const totalProductSold = await prisma.detailTransaction.aggregate({
-            _sum: {
-                quantity: true
-            }
-        });
-        const totalIncome = await prisma.transaction.aggregate({
-            _sum: {
-                total: true                
-            }
+const getAllRecapData = () => {
+    return new Promise((resolve, reject) => {
+        Promise.all([
+            new Promise((res, rej) => {
+                db.get('SELECT COUNT(id) AS totalTransaction FROM transactions', [], (err, row) => {
+                    if (err) return rej(err);
+                    res(row.totalTransaction);
+                });
+            }),
+            new Promise((res, rej) => {
+                db.get('SELECT SUM(stok) AS totalProduct FROM products', [], (err, row) => {
+                    if (err) return rej(err);
+                    res(row.totalProduct || 0);
+                });
+            }),
+            new Promise((res, rej) => {
+                db.get('SELECT SUM(quantity) AS totalProductSold FROM detail_transactions', [], (err, row) => {
+                    if (err) return rej(err);
+                    res(row.totalProductSold || 0);
+                });
+            }),
+            new Promise((res, rej) => {
+                db.get('SELECT SUM(total) AS totalIncome FROM transactions', [], (err, row) => {
+                    if (err) return rej(err);
+                    res(row.totalIncome || 0);
+                });
+            })
+        ])
+        .then(([totalTransaction, totalProduct, totalProductSold, totalIncome]) => {
+            resolve({
+                totalTransaction,
+                totalProduct,
+                totalProductSold,
+                totalIncome
+            });
         })
-
-        return {
-            totalTransaction: totalTransaction,
-            totalProduct: totalProduct._sum.stok,
-            totalProductSold: totalProductSold._sum.quantity,
-            totalIncome: totalIncome._sum.total                                             
-        };
-    } catch (e) {
-        throw new Error(e.message)
-    }
-}; 
+        .catch(reject);
+    });
+};
 
 module.exports = {
     getAllRecapData
-}
+};
