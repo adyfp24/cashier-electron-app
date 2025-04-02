@@ -1,5 +1,22 @@
 require('dotenv').config();
 
+const fs = require('fs');
+
+let envPath = '.env';
+if (process.env.NODE_ENV === 'production' || process.env.ELECTRON_RUN_AS_NODE) {
+  
+  const resourcesPath = process.resourcesPath || path.join(__dirname, '..');
+  envPath = path.join(resourcesPath, '.env');
+
+  if (fs.existsSync(envPath)) {
+    console.log(`Loading .env from: ${envPath}`);
+  } else {
+    console.error(`Cannot find .env at: ${envPath}`);
+  }
+}
+
+require('dotenv').config({ path: envPath });
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
