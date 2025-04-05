@@ -98,7 +98,7 @@ function Payment() {
         <>
             <Navbar />
             <Sidebar />
-            <section className="h-screen py-8 pt-20 antialiased bg-white dark:bg-gray-900 md:py-16 md:ml-64">
+            <section className="h-full py-8 pt-20 antialiased bg-white dark:bg-gray-900 md:py-16 md:ml-64">
                 <div className="max-w-screen-xl px-4 mx-auto overflow-y-auto 2xl:px-0">
                     <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">List Pembelian</h2>
 
