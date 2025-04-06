@@ -3,6 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "main": "main.js",
+  "appId": "com.autocenter.cashier",
+  "win": {
+    "target": "nsis",
+    "icon": "assets/icon.ico"
+  },
   "scripts": {
     "start": "node ./bin/www",
     "build": "webpack --mode development --watch",
@@ -10,7 +15,8 @@
     "dev": "npm-run-all --parallel electron dev-server",
     "package": "electron-packager . automotive-cashier --platform=win32 --arch=x64 --overwrite --out=dist --extra-resource=.env",
     "seed": "node prisma/seeders/index",
-    "dev-server": "nodemon ./bin/www"
+    "dev-server": "nodemon ./bin/www",
+    "dist": "electron-builder --win"
   },
   "dependencies": {
     "@prisma/client": "^5.19.1",
@@ -49,6 +55,7 @@
     "babel-preset-react": "^6.24.1",
     "css-loader": "^7.1.2",
     "electron": "^32.0.1",
+    "electron-builder": "^26.0.12",
     "electron-packager": "^17.1.2",
     "file-loader": "^6.2.0",
     "nodemon": "^3.1.7",
