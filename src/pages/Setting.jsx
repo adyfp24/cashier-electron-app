@@ -38,7 +38,7 @@ function Setting() {
         <>
             <Navbar />
             <Sidebar />
-            <section className="h-screen p-3 pt-20 bg-gray-50 dark:bg-gray-900 sm:p-5 md:ml-64">
+            <section className="min-h-screen p-3 pt-20 bg-gray-50 dark:bg-gray-900 sm:p-5 md:ml-64">
                 <div className="max-w-screen-xl px-4 pt-10 mx-auto lg:px-12">
                     <h1 className="pt-6 mb-6 text-xl font-semibold text-gray-800 dark:text-white">
                         Pengaturan Aplikasi

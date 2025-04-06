@@ -91,9 +91,10 @@ function LandingPage() {
 
     return (
         <>
+        <div className='w-full h-full'>
             <Navbar />
             <Sidebar />
-            <main className="h-full p-4 pt-20 bg-white md:ml-64 dark:bg-gray-900">
+            <main className="min-h-screen p-4 pt-20 bg-white md:ml-64 dark:bg-gray-900">
                 <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-3 lg:grid-cols-4">
                     <div className="flex items-center p-4 bg-white rounded-lg shadow dark:bg-gray-800">
                         <div className="p-3 bg-blue-500 bg-opacity-75 rounded-full">
@@ -149,6 +150,7 @@ function LandingPage() {
                     <canvas ref={chartRef} className="h-64"></canvas>
                 </div>
             </main>
+            </div>
         </>
     );
 }
