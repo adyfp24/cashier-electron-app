@@ -7,18 +7,23 @@ import Receipt from './pages/Receipt'
 import AuthPage from './pages/AuthPage'
 import TransactionHistory from './pages/TransactionHistory'
 import Setting from './pages/Setting'
+// import Protected from './pages/Protected'
 
 function App() {
     return (
         <Routes>
             {/* public route */}
             <Route path='/' element={<AuthPage />}></Route>
-            <Route path='/dashboard' element={<LandingPage />}></Route>
-            <Route path='/product' element={<Product />}></Route>
-            <Route path='/payment' element={<Payment />}></Route>
-            <Route path='/receipt' element={<Receipt />}></Route>
-            <Route path='/history' element={<TransactionHistory />}></Route>
-            <Route path='/setting' element={<Setting />}></Route>
+
+            {/* protected route */}
+            {/* <Route element={<Protected />}> */}
+                <Route path='/dashboard' element={<LandingPage />}></Route>
+                <Route path='/product' element={<Product />}></Route>
+                <Route path='/payment' element={<Payment />}></Route>
+                <Route path='/receipt' element={<Receipt />}></Route>
+                <Route path='/history' element={<TransactionHistory />}></Route>
+                <Route path='/setting' element={<Setting />}></Route>
+            {/* </Route> */}
         </Routes>
     )
 }
