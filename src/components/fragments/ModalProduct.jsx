@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { ProductContext } from '../../context/productContext';
 
 function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
-    const { categories = [] } = useContext(ProductContext);
+    const { categories = [], getCategories } = useContext(ProductContext);
 
     const [formData, setFormData] = useState({
         nama: '',
@@ -16,19 +16,34 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
     });
 
     React.useEffect(() => {
-        if (productData) {
-            setFormData({
-                nama: productData.nama || '',
-                kode: productData.kode || '',
-                merk: productData.merk || '',
-                stok: productData.stok || 0,
-                harga: productData.harga || 0,
-                hargaBeli: productData.hargaBeli || 0,
-                jenis_produk: productData.jenisProduk,
-                gambar: null
-            });
+        if (isOpen) {
+            getCategories && getCategories();
+            
+            if (productData) {
+                setFormData({
+                    nama: productData.nama || '',
+                    kode: productData.kode || '',
+                    merk: productData.merk || '',
+                    stok: productData.stok || 0,
+                    harga: productData.harga || 0,
+                    hargaBeli: productData.hargaBeli || 0,
+                    jenis_produk: productData.jenisProduk?.id || productData.jenisProdukId || '',
+                    gambar: null
+                });
+            } else {
+                setFormData({
+                    nama: '',
+                    kode: '',
+                    stok: 0,
+                    merk: '',
+                    harga: 0,
+                    hargaBeli: 0,
+                    jenis_produk: '', 
+                    gambar: null
+                });
+            }
         }
-    }, [productData]);
+    }, [productData, isOpen, getCategories]);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -48,17 +63,14 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = new FormData();
-        data.append('nama', formData.nama);
-        data.append('kode', formData.kode);
-        data.append('stok', formData.stok);
-        data.append('harga', formData.harga);
-        data.append('hargaBeli', formData.hargaBeli);
-        data.append('merk', formData.merk);
-        data.append('jenis_produk', formData.jenis_produk);
-        if (formData.gambar) {
-            data.append('gambar', formData.gambar);
-        }
-
+        if (formData.nama) data.append('nama', formData.nama);
+        if (formData.kode) data.append('kode', formData.kode);
+        if (formData.stok !== undefined) data.append('stok', formData.stok);
+        if (formData.harga !== undefined) data.append('harga', formData.harga);
+        if (formData.hargaBeli !== undefined) data.append('hargaBeli', formData.hargaBeli);
+        if (formData.merk) data.append('merk', formData.merk);
+        if (formData.jenis_produk) data.append('jenis_produk', formData.jenis_produk);
+        if (formData.gambar) data.append('gambar', formData.gambar);
         onSubmit(data); 
         onClose();
     };
@@ -143,4 +155,3 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
 }
 
 export default ProductModal;
- 
