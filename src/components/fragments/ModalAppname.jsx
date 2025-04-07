@@ -24,17 +24,17 @@ function ModalAppname({ isOpen, onClose, onSubmit }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-80">
-            <div className="p-6 bg-white rounded-lg dark:bg-gray-800 w-96">
-                <h2 className="mb-4 text-xl font-semibold dark:text-gray-200">Edit Nama Aplikasi</h2>
+            <div className="p-6 bg-white rounded-lg w-96">
+                <h2 className="mb-4 text-xl font-semibold">Edit Nama Aplikasi</h2>
 
                 <div className="mb-4">
-                    <label htmlFor="appName" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Nama Aplikasi</label>
+                    <label htmlFor="appName" className="block text-sm font-medium text-gray-700">Nama Aplikasi</label>
                     <input
                         id="appName"
                         type="text"
                         value={appName}
                         onChange={(e) => setAppName(e.target.value)}
-                        className="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-gray-400 focus:ring-blue-500 focus:border-blue-500"
+                        className="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Masukkan nama aplikasi baru"
                     />
                 </div>

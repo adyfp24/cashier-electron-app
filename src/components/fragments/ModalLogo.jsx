@@ -30,16 +30,16 @@ function ModalLogo({ isOpen, onClose, onSubmit }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-80">
-            <div className="p-6 bg-white rounded-lg dark:bg-gray-800 w-96">
-                <h2 className="mb-4 text-xl font-semibold dark:text-gray-200">Edit Logo Aplikasi</h2>
+            <div className="p-6 bg-white rounded-lg w-96">
+                <h2 className="mb-4 text-xl font-semibold">Edit Logo Aplikasi</h2>
                 
                 <div className="mb-4">
-                    <label htmlFor="logo" className="block text-sm font-medium text-gray-700 dark:text-gray-400">Logo Aplikasi</label>
+                    <label htmlFor="logo" className="block text-sm font-medium text-gray-700">Logo Aplikasi</label>
                     <input
                         id="logo"
                         type="file"
                         onChange={handleFileChange}
-                        className="block w-full mt-1 text-sm text-gray-900 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-gray-200 file:border-0 file:bg-gray-50 file:text-sm file:font-medium file:text-blue-700 file:hover:bg-gray-100"
+                        className="block w-full mt-1 text-sm text-gray-900 border border-gray-300 rounded-lg file:border-0 file:bg-gray-50 file:text-sm file:font-medium file:text-blue-700 file:hover:bg-gray-100"
                     />
                 </div>
 

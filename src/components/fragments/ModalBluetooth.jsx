@@ -31,17 +31,17 @@ function ModalBluetooth({ isOpen, onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-80">
-            <div className="p-6 bg-white rounded-lg dark:bg-gray-800 w-96">
-                <h2 className="mb-4 text-xl font-semibold dark:text-gray-200">Pilih Perangkat Bluetooth</h2>
+            <div className="p-6 bg-white rounded-lg w-96">
+                <h2 className="mb-4 text-xl font-semibold">Pilih Perangkat Bluetooth</h2>
                 
                 <div className="mb-4 space-y-2">
                     {bluetoothDevices.map((device) => (
                         <div
                             key={device.id}
                             onClick={() => handleSelectDevice(device)}
-                            className={`cursor-pointer p-2 rounded-lg ${selectedDevice?.id === device.id ? 'bg-blue-200 dark:bg-blue-700' : 'bg-gray-100 dark:bg-gray-700'}`}
+                            className={`cursor-pointer p-2 rounded-lg ${selectedDevice?.id === device.id ? 'bg-blue-200' : 'bg-gray-100'}`}
                         >
-                            <p className='dark:text-gray-400'>{device.name}</p>
+                            {device.name}
                         </div>
                     ))}
                 </div>

@@ -91,66 +91,64 @@ function LandingPage() {
 
     return (
         <>
-        <div className='w-full h-full'>
             <Navbar />
             <Sidebar />
-            <main className="min-h-screen p-4 pt-20 bg-white md:ml-64 dark:bg-gray-900">
+            <main className="h-auto p-4 pt-20 md:ml-64">
                 <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-3 lg:grid-cols-4">
-                    <div className="flex items-center p-4 bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="flex items-center p-4 bg-white rounded-lg shadow">
                         <div className="p-3 bg-blue-500 bg-opacity-75 rounded-full">
                             <svg className="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a1 1 0 001 1h16a1 1 0 001-1V7M5 3h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" />
                             </svg>
                         </div>
                         <div className="ml-4">
-                            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Produk</h3>
-                            <p className="text-lg font-bold dark:text-white">{allRecapData.totalProduct ?? 0}</p>
+                            <h3 className="text-lg font-semibold text-gray-700">Total Produk</h3>
+                            <p className="text-lg font-bold">{allRecapData.totalProduct ?? 0}</p>
                         </div>
                     </div>
 
-                    <div className="flex items-center p-4 bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="flex items-center p-4 bg-white rounded-lg shadow">
                         <div className="p-3 bg-green-500 bg-opacity-75 rounded-full">
                             <svg className="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-2a2 2 0 012-2h6a2 2 0 012 2v2m-6-2v-6m0 0L9 7m3 2v6" />
                             </svg>
                         </div>
                         <div className="ml-4">
-                            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Produk Terjual</h3>
-                            <p className="text-lg font-bold dark:text-white">{allRecapData.totalProductSold ?? 0}</p>
+                            <h3 className="text-lg font-semibold text-gray-700">Produk Terjual</h3>
+                            <p className="font-bold text-handleLogout">{allRecapData.totalProductSold ?? 0}</p>
                         </div>
                     </div>
 
-                    <div className="flex items-center p-4 bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="flex items-center p-4 bg-white rounded-lg shadow">
                         <div className="p-3 bg-yellow-500 bg-opacity-75 rounded-full">
                             <svg className="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 17l-4-4m0 0l4-4m-4 4h12" />
                             </svg>
                         </div>
                         <div className="ml-4">
-                            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Transaksi</h3>
-                            <p className="text-lg font-bold dark:text-white">{allRecapData.totalTransaction ?? 0}</p>
+                            <h3 className="text-lg font-semibold text-gray-700">Total Transaksi</h3>
+                            <p className="text-lg font-bold">{allRecapData.totalTransaction ?? 0}</p>
                         </div>
                     </div>
 
-                    <div className="flex items-center p-4 bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="flex items-center p-4 bg-white rounded-lg shadow">
                         <div className="p-3 bg-red-500 bg-opacity-75 rounded-full">
                             <svg className="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 17h8M13 13h8m-8-4h8m-8-4h8M4 20l4-16m-4 0h16" />
                             </svg>
                         </div>
                         <div className="ml-4">
-                            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Total Pendapatan</h3>
-                            <p className="text-lg font-bold dark:text-white">{formatRupiah(allRecapData.totalIncome) ?? 0}</p>
+                            <h3 className="text-lg font-semibold text-gray-700">Total Pendapatan</h3>
+                            <p className="text-lg font-bold">{formatRupiah(allRecapData.totalIncome) ?? 0}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-4 bg-white rounded-lg shadow dark:bg-gray-800">
-                    <h3 className="mb-4 text-lg font-semibold text-gray-700 dark:text-gray-200">Grafik Penjualan</h3>
+                <div className="p-4 bg-white rounded-lg shadow">
+                    <h3 className="mb-4 text-lg font-semibold text-gray-700">Grafik Penjualan</h3>
                     <canvas ref={chartRef} className="h-64"></canvas>
                 </div>
             </main>
-            </div>
         </>
     );
 }
