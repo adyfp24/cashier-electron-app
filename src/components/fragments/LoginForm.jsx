@@ -40,7 +40,7 @@ function LoginForm({ onLogin, error, settings }) {
                                 <div>
                                     <label for="username"
                                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        username</label>
+                                        USERNAME</label>
                                     <input onChange={handleChange}
                                         value={formData.username}
                                         type="text"
@@ -53,7 +53,7 @@ function LoginForm({ onLogin, error, settings }) {
                                 </div>
                                 <div>
                                     <label for="password"
-                                        className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                        className="block mb-4 text-sm font-medium text-gray-900 dark:text-white">PASSWORD</label>
                                     <input onChange={handleChange}
                                         value={formData.password}
                                         type="password"
