@@ -10,7 +10,7 @@ import CommonToast from '../components/elements/CommonToast';
 
 function Product() {
     const { products, error, loading, addProduct, addCategory,
-        deleteProduct, updateProduct, pagination, getAllProduct } = useContext(ProductContext);
+        deleteProduct, updateProduct, pagination, getAllProduct, getAllCategories } = useContext(ProductContext);
 
     const [dropdownOpen, setDropdownOpen] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -74,17 +74,30 @@ function Product() {
     const handleSubmit = async (data) => {
         try {
             if (selectedProduct) {
-                await updateProduct(selectedProduct.id, data)
-                navigate('/product')
+                await updateProduct(selectedProduct.id, data);
+                setIsCommonToastOpen(true);
+                setToastMessage({
+                    type: 'success',
+                    message: 'Produk berhasil diperbarui',
+                });
             } else {
-                await addProduct(data)
-                console.log(data)
-                navigate('/product')
+                await addProduct(data);
+                setIsCommonToastOpen(true);
+                setToastMessage({
+                    type: 'success',
+                    message: 'Produk berhasil ditambahkan',
+                });
             }
-            setModalOpen(false)
-            setSelectedProduct(null)
+            setSelectedProduct(null);
+            await getAllProduct(pagination.page);
+            setModalOpen(false);
         } catch (error) {
-            console.log(error.message)
+            setIsCommonToastOpen(true);
+            setToastMessage({
+                type: 'error',
+                message: error.message || 'Terjadi kesalahan',
+            });
+            console.log(error.message);
         }
     }
 
@@ -316,6 +329,7 @@ function Product() {
                 onClose={() => {
                     setModalCategoryOpen(false)
                 }}
+                onCategoryAdded={getAllCategories}
                 onSubmit={handleSubmitCategory}
             ></CategoryModal>
         </>

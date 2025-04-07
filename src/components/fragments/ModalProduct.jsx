@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { ProductContext } from '../../context/productContext';
 
 function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
-    const { categories = [] } = useContext(ProductContext);
+    const { categories = [], getCategories } = useContext(ProductContext);
 
     const [formData, setFormData] = useState({
         nama: '',
@@ -16,19 +16,53 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
     });
 
     React.useEffect(() => {
-        if (productData) {
-            setFormData({
-                nama: productData.nama || '',
-                kode: productData.kode || '',
-                merk: productData.merk || '',
-                stok: productData.stok || 0,
-                harga: productData.harga || 0,
-                hargaBeli: productData.hargaBeli || 0,
-                jenis_produk: productData.jenisProduk,
-                gambar: null
-            });
+        if (isOpen) {
+            getCategories && getCategories();
+            
+            if (productData) {
+                let categoryId = '';
+                if (productData.jenisProduk && typeof productData.jenisProduk === 'object' && productData.jenisProduk.id) {
+                    categoryId = productData.jenisProduk.id.toString();
+                } else if (productData.jenisProdukId) {
+                    categoryId = productData.jenisProdukId.toString();
+                } else if (productData.jenis_produk) {
+                    categoryId = productData.jenis_produk.toString();
+                } else if (productData.jenisProduk && categories.length > 0) {
+                    const matchingCategory = categories.find(cat => 
+                        (cat.name && cat.name === productData.jenisProduk) || 
+                        (cat.nama && cat.nama === productData.jenisProduk)
+                    );
+                    if (matchingCategory) {
+                        categoryId = matchingCategory.id.toString();
+                    }
+                }
+                
+                console.log("Selected Category ID:", categoryId);
+                
+                setFormData({
+                    nama: productData.nama || '',
+                    kode: productData.kode || '',
+                    merk: productData.merk || '',
+                    stok: productData.stok || 0,
+                    harga: productData.harga || 0,
+                    hargaBeli: productData.hargaBeli || 0,
+                    jenis_produk: categoryId,
+                    gambar: null
+                });
+            } else {
+                setFormData({
+                    nama: '',
+                    kode: '',
+                    stok: 0,
+                    merk: '',
+                    harga: 0,
+                    hargaBeli: 0,
+                    jenis_produk: '', 
+                    gambar: null
+                });
+            }
         }
-    }, [productData]);
+    }, [productData, isOpen, getCategories, categories]);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -48,17 +82,14 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = new FormData();
-        data.append('nama', formData.nama);
-        data.append('kode', formData.kode);
-        data.append('stok', formData.stok);
-        data.append('harga', formData.harga);
-        data.append('hargaBeli', formData.hargaBeli);
-        data.append('merk', formData.merk);
-        data.append('jenis_produk', formData.jenis_produk);
-        if (formData.gambar) {
-            data.append('gambar', formData.gambar);
-        }
-
+        if (formData.nama) data.append('nama', formData.nama);
+        if (formData.kode) data.append('kode', formData.kode);
+        if (formData.stok !== undefined) data.append('stok', formData.stok);
+        if (formData.harga !== undefined) data.append('harga', formData.harga);
+        if (formData.hargaBeli !== undefined) data.append('hargaBeli', formData.hargaBeli);
+        if (formData.merk) data.append('merk', formData.merk);
+        if (formData.jenis_produk) data.append('jenis_produk', formData.jenis_produk);
+        if (formData.gambar) data.append('gambar', formData.gambar);
         onSubmit(data); 
         onClose();
     };
@@ -103,20 +134,23 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
                                     <label htmlFor="hargaBeli" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Harga Beli</label>
                                     <input type="number" name="hargaBeli" id="hargaBeli" value={formData.hargaBeli} onChange={handleChange} className="bg-gray-50 border dark:bg-gray-700 dark:border-gray-600 border-gray-300 text-gray-900 dark:text-gray-400 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="masukkan harga beli" required />
                                 </div>
-                                <select 
-                                    id="jenis_produk" 
-                                    name="jenis_produk" 
-                                    value={formData.jenis_produk} 
-                                    onChange={handleChange} 
-                                    className="relative bg-gray-50 border border-gray-300 text-gray-900 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 z-50"
-                                >
-                                    <option value="">Kategori Produk</option>
-                                    {categories.map((category) => (
-                                        <option key={category.id} value={category.id}>
-                                            {category.name || category.nama}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div>
+                                    <label htmlFor="jenis_produk" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Kategori Produk</label>
+                                    <select 
+                                        id="jenis_produk" 
+                                        name="jenis_produk" 
+                                        value={formData.jenis_produk} 
+                                        onChange={handleChange} 
+                                        className="relative bg-gray-50 border border-gray-300 text-gray-900 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 z-50"
+                                    >
+                                        <option value="">Kategori Produk</option>
+                                        {categories.map((category) => (
+                                            <option key={category.id} value={category.id}>
+                                                {category.name || category.nama}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <div className="sm:col-span-2">
                                     <label htmlFor="gambar" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">
                                         Gambar Produk
@@ -143,4 +177,3 @@ function ProductModal({ isOpen, onClose, onSubmit, productData = null }) {
 }
 
 export default ProductModal;
- 

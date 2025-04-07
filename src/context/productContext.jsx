@@ -19,6 +19,7 @@ export const ProductProvider = ({ children }) => {
             const allProducts = await productService.getAll(page);
             setProducts(allProducts.products);
             setPagination(allProducts.pagination);
+            await getCategories();
         } catch (err) {
             setError(err);
         }
@@ -61,7 +62,9 @@ export const ProductProvider = ({ children }) => {
     const addCategory = async (newData) => {
         setLoading(true);
         try {
-            await productService.addCategory(newData);
+            const response = await productService.addCategory(newData);
+            await getAllCategories();
+            return response.data;
         } catch (err) {
             setError(err);
         }
