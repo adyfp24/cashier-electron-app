@@ -10,7 +10,7 @@ import CommonToast from '../components/elements/CommonToast';
 
 function Product() {
     const { products, error, loading, addProduct, addCategory,
-        deleteProduct, updateProduct, pagination, getAllProduct, getAllCategories } = useContext(ProductContext);
+        deleteProduct, updateProduct, pagination, getAllProduct, getAllCategories, } = useContext(ProductContext);
 
     const [dropdownOpen, setDropdownOpen] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -29,7 +29,7 @@ function Product() {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const navigate = useNavigate()
 
-    const categories = [...new Set(products.map(product => product.jenisProduk?.name).filter(Boolean))];
+    const categories = [...new Set(products.map(product => product.jenisProduk).filter(Boolean))];
 
     const handleAddProduct = () => {
         setSelectedProduct(null)
@@ -141,7 +141,9 @@ function Product() {
         }
 
         if (selectedCategories.length > 0) {
-            filtered = filtered.filter(product => selectedCategories.includes(product.jenisProduk));
+            filtered = filtered.filter(product => 
+                selectedCategories.includes(product.jenisProduk)
+            );
         }
 
         setFilteredProducts(filtered);
@@ -223,7 +225,7 @@ function Product() {
                                     Filter Kategori
                                 </button>
                                 {isFilterDropdownOpen && (
-                                    <div className="absolute right-0 w-48 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600">
+                                    <div className="absolute right-0 w-48 mt-2 pb-10 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-600 max-h-60 overflow-y-auto">
                                         {categories.map(category => (
                                             <label key={category} className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
                                                 <input 
