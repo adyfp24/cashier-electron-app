@@ -7,6 +7,7 @@ import Receipt from './pages/Receipt'
 import AuthPage from './pages/AuthPage'
 import TransactionHistory from './pages/TransactionHistory'
 import Setting from './pages/Setting'
+import './index.css'
 // import Protected from './pages/Protected'
 
 function App() {

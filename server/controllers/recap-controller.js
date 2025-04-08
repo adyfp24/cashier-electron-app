@@ -3,7 +3,8 @@ const { clientErrorResponse, errorResponse, successResponse } = require('../midd
 
 const getAllRecapData = async (req, res) => {
     try {
-        const response = await recapService.getAllRecapData();
+        const { month, year } = req.query;
+        const response = await recapService.getAllRecapData({ month, year });
         return successResponse(res, response, 'data rekap berhasil didapat');
     } catch (error) {
         return errorResponse(res, error);

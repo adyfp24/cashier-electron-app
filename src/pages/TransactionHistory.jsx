@@ -87,32 +87,32 @@ function TransactionHistory() {
         <>
             <Navbar />
             <Sidebar />
-            <section className="h-full p-3 pt-20 bg-gray-50 dark:bg-gray-900 sm:p-5 md:ml-64">
+            <section className="min-h-screen p-3 pt-20 bg-gray-50 dark:bg-gray-900 sm:p-5 md:ml-64">
                 <div className="max-w-screen-xl px-4 mx-auto lg:px-12">
                     <div className="relative mt-20 overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                         <div className="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
                             <div className="flex flex-col items-stretch flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
                                 <button
                                     onClick={() => filterTransactions('all')}
-                                    className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'all' ? 'bg-primary-800' : ''}`}
+                                    className={`dark:text-gray-200 flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'all' ? 'bg-primary-800' : ''}`}
                                 >
                                     Semua Waktu
                                 </button>
                                 <button
                                     onClick={() => filterTransactions('daily')}
-                                    className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'daily' ? 'bg-primary-800' : ''}`}
+                                    className={`dark:text-gray-200 flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'daily' ? 'bg-primary-800' : ''}`}
                                 >
                                     Harian
                                 </button>
                                 <button
                                     onClick={() => filterTransactions('weekly')}
-                                    className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'weekly' ? 'bg-primary-800' : ''}`}
+                                    className={`dark:text-gray-200 flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'weekly' ? 'bg-primary-800' : ''}`}
                                 >
                                     Mingguan
                                 </button>
                                 <button
                                     onClick={() => filterTransactions('monthly')}
-                                    className={`flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'monthly' ? 'bg-primary-800' : ''}`}
+                                    className={`dark:text-gray-200 flex items-center border-2 justify-center bg-primary-700 hover:bg-primary-800 focus:ring-2 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 ${filterPeriod === 'monthly' ? 'bg-primary-800' : ''}`}
                                 >
                                     Bulanan
                                 </button>
@@ -149,7 +149,7 @@ function TransactionHistory() {
                                             <td className="px-4 py-3">
                                                 <button
                                                     onClick={() => handleDetailClick(transaction)}
-                                                    className="px-4 py-2 font-semibold text-gray-900 border border-2 border-gray-200 rounded rounded-lg"
+                                                    className="px-4 py-2 font-semibold text-gray-900 border border-gray-200 rounded-lg dark:border-gray-400 dark:text-gray-400"
                                                 >
                                                     Detail
                                                 </button>

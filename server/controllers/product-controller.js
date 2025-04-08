@@ -85,41 +85,39 @@ const deleteProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-        console.log('Data dari req.body:', req.body); // Debugging
-        const image = req.file.filename || '';
+        const id = req.params.id;
         const {
             nama,
+            kode,
             stok,
             harga,
-            merk,
-            kode,
             hargaBeli,
+            merk,
             jenis_produk,
         } = req.body;
-
-        const product = {
+        const oldProduct = await productService.getProductById(id);
+        if (!oldProduct) {
+            return notFoundResponse(res, "Produk tidak ditemukan");
+        }
+        const updatedProduct = {
             nama,
+            kode,
             stok: parseInt(stok, 10),
             harga: parseInt(harga, 10),
             hargaBeli: parseInt(hargaBeli, 10),
             merk,
-            kode,
             jenisProdukId: parseInt(jenis_produk, 10),
-            gambar: '/products/' + image
-        }
-
-        const productId = req.params.id;
-        const updatedProduct = await productService.updateProduct(productId, product);
-
-        if (updatedProduct) {
-            return successResponse(res, updatedProduct, "data produk berhasil diperbarui")
-        } else {
-            return notFoundResponse(res, "data produk gagal diperbarui karena id tidak valid");
+            gambar: req.file ? '/products/' + req.file.filename : oldProduct.gambar
         };
+        
+        const result = await productService.updateProduct(id, updatedProduct);
+        return successResponse(res, result, "Produk berhasil diupdate");
     } catch (error) {
+        console.error(error);
         return errorResponse(res, error);
     }
-}
+};
+  
 
 module.exports = {
     createProduct,
