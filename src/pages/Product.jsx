@@ -263,7 +263,7 @@ function Product() {
                             </div>
                         </div>
                         <div className="overflow-x-auto">
-                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <table className="w-full mb-16 text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                         <th scope="col" className="px-4 py-3">Nama Produk</th>
@@ -281,8 +281,9 @@ function Product() {
                                 <tbody>
                                     {filteredProducts.map((product) => (
                                         <tr key={product.id} className="border-b dark:border-gray-700">
-                                            <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {product.nama}
+                                            <td className="flex items-center px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <img className='w-8 h-8 rounded-full' src={product?.gambar || ''} alt="" />
+                                                <p className='ml-2'>{product.nama}</p>
                                             </td>
                                             <td className="px-4 py-3">{product.kode}</td>
                                             <td className="px-4 py-3">{product.jenisProduk}</td>
@@ -297,9 +298,16 @@ function Product() {
                                                         className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                                                         type="button"
                                                     >
-                                                        <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                        </svg>
+                                                        {dropdownOpen !== product.id ? (
+                                                            <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                                            </svg>) : (
+
+                                                            <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                                            </svg>
+
+                                                        )}
                                                     </button>
                                                     {dropdownOpen === product.id && (
                                                         <div className={`absolute right-0 z-50 bg-white divide-y divide-gray-100 rounded shadow w-28 dark:bg-gray-700 dark:divide-gray-600 ${dropdownDirection[product.id] ? 'bottom-full mb-1' : 'top-full mt-1'}`}>
