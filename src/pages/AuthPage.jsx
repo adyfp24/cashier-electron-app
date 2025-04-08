@@ -33,7 +33,7 @@ function AuthPage() {
     return (
         <>
             <section className="flex w-full h-screen main-container bg-slate-400">
-                <div className="flex items-center justify-center w-1/2 dark:bg-gray-800">
+                <div className="flex items-center justify-center w-1/2 bg-slate-200 dark:bg-gray-800">
                     <img className="h-3/4" src="/images/login-vector.png" alt="" />
                 </div>
                 <LoginForm onLogin={login} error={authError} settings={settings}/>
