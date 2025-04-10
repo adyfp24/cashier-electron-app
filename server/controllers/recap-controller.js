@@ -11,6 +11,16 @@ const getAllRecapData = async (req, res) => {
     }
 };
 
+const getAvailableYears = async (req, res) => {
+    try {
+        const response = await recapService.getAvailableYears();
+        return successResponse(res, response, 'data tahun berhasil didapat');
+    } catch (error) {
+        return errorResponse(res, error);
+    }
+}
+
 module.exports = {
-    getAllRecapData
+    getAllRecapData,
+    getAvailableYears
 }

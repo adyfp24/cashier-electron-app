@@ -62,6 +62,16 @@ const getAllRecapData = ({ month, year }) => {
     });
 };
 
+const getAvailableYears = () => {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT DISTINCT strftime("%Y", tanggal) AS year FROM transactions ORDER BY year DESC', [], (err, rows) => {
+            if (err) return reject(err);
+            resolve(rows.map(row => row.year));
+        });
+    });
+}
+
 module.exports = {
-    getAllRecapData
+    getAllRecapData,
+    getAvailableYears
 }
