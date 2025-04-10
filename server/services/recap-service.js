@@ -48,14 +48,44 @@ const getAllRecapData = ({ month, year }) => {
                     if (err) return rej(err);
                     res(row.totalIncome || 0);
                 });
+            }),
+            new Promise((res, rej) => {
+                if (!year) return res([]); // only get monthly data if year is provided
+
+                db.all(
+                    `SELECT 
+                        strftime('%m', tanggal) AS month,
+                        COUNT(id) AS totalTransaction,
+                        SUM(total) AS totalIncome
+                     FROM transactions
+                     WHERE strftime('%Y', tanggal) = ?
+                     GROUP BY month
+                     ORDER BY month`,
+                    [year],
+                    (err, rows) => {
+                        if (err) return rej(err);
+                        // Ensure 12 months included (fill missing months with 0)
+                        const monthlyData = Array.from({ length: 12 }, (_, i) => {
+                            const m = String(i + 1).padStart(2, '0');
+                            const row = rows.find(r => r.month === m);
+                            return {
+                                month: m,
+                                totalTransaction: row?.totalTransaction || 0,
+                                totalIncome: row?.totalIncome || 0,
+                            };
+                        });
+                        res(monthlyData);
+                    }
+                );
             })
         ])
-        .then(([totalTransaction, totalProduct, totalProductSold, totalIncome]) => {
+        .then(([totalTransaction, totalProduct, totalProductSold, totalIncome, monthList]) => {
             resolve({
                 totalTransaction,
                 totalProduct,
                 totalProductSold,
-                totalIncome
+                totalIncome,
+                monthList
             });
         })
         .catch(reject);
