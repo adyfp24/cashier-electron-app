@@ -8,7 +8,7 @@ import { formatRupiah } from '../utils/function';
 Chart.register(...registerables);
 
 function LandingPage() {
-    const { loading, error, allRecapData } = useContext(DashboardContext);
+    const { loading, error, allRecapData, availableYears, getAvailableYears } = useContext(DashboardContext);
     const chartRef = useRef(null);
 
     useEffect(() => {
@@ -83,6 +83,10 @@ function LandingPage() {
                 },
             },
         });
+
+        getAvailableYears();
+        
+        console.log('available years :', availableYears);
 
         return () => {
             myChart.destroy();
