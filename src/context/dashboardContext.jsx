@@ -8,13 +8,15 @@ export const DashboardProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [allRecapData, setAllRecapData] = useState(null);
-    const [availableYears, setAvailableYears] = useState(null);
+    const [availableYears, setAvailableYears] = useState([]);
 
     const location = useLocation();
     const getAllRecapData = async (params = {}) => {
         setLoading(true);
         try {
-            const { month = null, year = null } = params;
+            let { month = null, year = null } = params;
+            if (!year) year = new Date().getFullYear();
+
             const allData = await dashboardService.getAllRecapData({ month, year });
             setAllRecapData(allData);
         } catch (error) {
@@ -44,7 +46,8 @@ export const DashboardProvider = ({ children }) => {
             error,
             allRecapData,
             availableYears,
-            getAvailableYears
+            getAvailableYears,
+            getAllRecapData
         }}>
             {children}
         </DashboardContext.Provider>
