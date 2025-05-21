@@ -19,13 +19,18 @@ function Payment() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!products || products.length === 0) {
+            setFilteredProducts([]);
+            return;
+        }
+
         if (searchQuery === '') {
             setFilteredProducts(products);
         } else {
             setFilteredProducts(
                 products.filter(product =>
-                    product.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    product.jenisProduk.name.toLowerCase().includes(searchQuery.toLowerCase())
+                    product.nama?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    product.jenisProduk?.name?.toLowerCase().includes(searchQuery.toLowerCase())
                 )
             );
         }
@@ -37,7 +42,11 @@ function Payment() {
     }, [cart]);
 
     const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
+        try {
+            setSearchQuery(e.target.value);
+        } catch (error) {
+            console.error("Error updating search query:", error);
+        }
     };
 
     const addToCart = (product) => {
@@ -104,12 +113,12 @@ function Payment() {
 
                     <div className="mt-4 sm:mt-4 md:gap-6 lg:flex lg:items-start xl:gap-8">
                         <div className="flex-none w-2/3 lg:max-w-2xl xl:max-w-4xl">
-                            <div className="space-y-6 ">
+                            <div className="space-y-6">
                                 <div className="p-2 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-3">
                                     {cart.length !== 0 ? cart.map((item) => (
                                         <div key={item.productId} className="mb-2 space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                             <a href="#" className="overflow-hidden rounded">
-                                                <img className="w-10 h-10 mx-auto" src={item.gambar} alt="product image" />
+                                                <img className="w-10 h-10 mx-auto" src={item.gambar || ''} alt="product image" />
                                             </a>
                                             <div className="flex items-center justify-between space-x-8 md:order-3 md:justify-end">
                                                 <div className="flex items-center">
@@ -132,25 +141,30 @@ function Payment() {
                                                 <p className="text-base font-normal text-gray-500 dark:text-gray-400">Rp. {item.harga}</p>
                                             </div>
                                         </div>
-
                                     )) : <p className="text-center text-gray-500">Belum ada item yang ditambahkan</p>}
                                 </div>
                             </div>
                             <h3 className="mt-4 text-2xl font-semibold dark:text-gray-200">Pilih Item Pembelian</h3>
-                            <input onChange={handleSearchChange} type="text" placeholder="Search" className="w-full p-2 mt-4 border rounded-md dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700" />
+                            <input 
+                                onChange={handleSearchChange} 
+                                type="text" 
+                                value={searchQuery}
+                                placeholder="Search" 
+                                className="w-full p-2 mt-4 border rounded-md dark:text-gray-200 dark:bg-gray-800 dark:border-gray-700" 
+                            />
                             <div className="grid grid-cols-3 gap-4 mt-6">
-                                {filteredProducts.length ? filteredProducts.map((product) => (
+                                {filteredProducts && filteredProducts.length ? filteredProducts.map((product) => (
                                     <div key={product.id} className="p-6 bg-white border rounded-lg dark:border-gray-700 dark:bg-gray-800">
                                         <a href="#" className="overflow-hidden rounded">
                                             <img className="mx-auto h-28 w-28" src={product?.gambar || ''} alt="product image" />
                                         </a>
-                                        <p className="mt-3 text-lg font-semibold dark:text-gray-200">{product.nama}</p>
-                                        <p className="text-sm text-gray-500 dark:text-gray-200">{product.stok} Unit</p>
-                                        <p className="text-base font-semibold text-gray-500 dark:text-gray-400">Rp. {product.harga}</p>
+                                        <p className="mt-3 text-lg font-semibold dark:text-gray-200">{product.nama || ''}</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-200">{product.stok || 0} Unit</p>
+                                        <p className="text-base font-semibold text-gray-500 dark:text-gray-400">Rp. {product.harga || 0}</p>
                                         <div className="mt-5 flex items-center gap-2.5">
-                                            <button onClick={() => addToCart(product)} type="button" className="inline-flex w-full items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                            <button onClick={() => addToCart(product)} type="button" className="inline-flex w-full items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                                 <svg className="w-5 h-5 -ms-2 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7h-1M8 7h-.688M13 5v4m-2-2h4" />
+                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7h-1M8 7h-.688M13 5v4m-2-2h4" />
                                                 </svg>
                                                 Tambahkan
                                             </button>
@@ -160,31 +174,40 @@ function Payment() {
                             </div>
                         </div>
                     </div>
-                    <div class="mx-auto ml-4 mt-6 pt-2 md:72 lg:w-80 flex-1 space-y-6 fixed overflow-auto top-20 right-5">
-                        <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
-                            <p class="text-xl text-center font-bold text-gray-900 dark:text-white pb-6">Ringkasan Pembelian</p>
+                    <div className="mx-auto ml-4 mt-6 pt-2 md:72 lg:w-80 flex-1 space-y-6 fixed overflow-auto top-20 right-5">
+                        <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
+                            <p className="text-xl text-center font-bold text-gray-900 dark:text-white pb-6">Ringkasan Pembelian</p>
 
-                            <div class="space-y-4">
-                                {cart.length > 0 && <dt class="text-base font-bold text-gray-900 dark:text-white">Sub Total</dt>}
+                            <div className="space-y-4">
+                                {cart.length > 0 && <dt className="text-base font-bold text-gray-900 dark:text-white">Sub Total</dt>}
                                 {cart.map((item) => (
-                                    <div key={item.productId} class="space-y-2">
-                                        <dl class="flex items-center justify-between gap-4">
-                                            <dt class="text-base font-normal text-gray-500 dark:text-gray-400">{item.nama}</dt>
-                                            <dd class="text-base font-medium text-gray-900 dark:text-white">Rp. {item.harga * item.quantity}</dd>
+                                    <div key={item.productId} className="space-y-2">
+                                        <dl className="flex items-center justify-between gap-4">
+                                            <dt className="text-base font-normal text-gray-500 dark:text-gray-400">{item.nama}</dt>
+                                            <dd className="text-base font-medium text-gray-900 dark:text-white">Rp. {item.harga * item.quantity}</dd>
                                         </dl>
                                     </div>
                                 ))}
 
-                                <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-                                    <dt class="text-base font-bold text-gray-900 dark:text-white">Total</dt>
-                                    <dd class="text-base font-bold text-gray-900 dark:text-white">Rp. {total}</dd>
+                                <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
+                                    <dt className="text-base font-bold text-gray-900 dark:text-white">Total</dt>
+                                    <dd className="text-base font-bold text-gray-900 dark:text-white">Rp. {total}</dd>
                                 </dl>
                             </div>
 
-                            <div class="flex items-center justify-center pt-6">
-                                <button onClick={() => showPopUpConfirm()} type="button" className="inline-flex w-full items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                            <div className="flex items-center justify-center pt-6">
+                                <button 
+                                    onClick={showPopUpConfirm} 
+                                    type="button" 
+                                    disabled={cart.length === 0}
+                                    className={`inline-flex w-full items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800 ${
+                                        cart.length === 0 
+                                        ? 'bg-gray-400 cursor-not-allowed' 
+                                        : 'bg-blue-700 hover:bg-blue-500 dark:bg-primary-600 dark:hover:bg-primary-700'
+                                    }`}
+                                >
                                     <svg className="w-5 h-5 -ms-2 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7h-1M8 7h-.688M13 5v4m-2-2h4" />
+                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7h-1M8 7h-.688M13 5v4m-2-2h4" />
                                     </svg>
                                     Selesaikan Pembelian
                                 </button>
@@ -192,7 +215,7 @@ function Payment() {
                         </div>
                     </div>
                 </div>
-            </section >
+            </section>
 
             {popUpConfirm && <PopUpConfirm
                 data={{
@@ -214,6 +237,6 @@ function Payment() {
             )}
         </>
     );
-
 }
+
 export default Payment;
